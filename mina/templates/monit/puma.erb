@@ -1,0 +1,8 @@
+check process puma_<%= app %> with pidfile <%= puma_pid %>
+  start program = "/bin/sh -c <%= puma_start %>"
+  as uid <%= user %> and gid admin
+  stop program = "/bin/sh -c 'cd <%= current_path %> && kill -9 $(cat tmp/pids/puma.pid) && rm -f tmp/pids/puma.pid tmp/sockets/puma.sock; exit 0;'"
+  if cpu > 60% for 2 cycles then alert
+  if cpu > 98% for 5 cycles then restart
+  if 2 restarts within 3 cycles then timeout
+  if totalmem is greater than 300 MB for 10 cycles then restart

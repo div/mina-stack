@@ -1,0 +1,42 @@
+upstream <%= app %> {
+  server unix://<%= puma_socket %> fail_timeout=0;
+}
+
+server {
+  # listen 80 default deferred;
+  server_name folify.com;
+  keepalive_timeout 5;
+
+  root <%= deploy_to %>/<%= current_path %>/public;
+
+  client_max_body_size 4G;
+
+  if (-f $document_root/system/maintenance.html) {
+    return 503;
+  }
+
+  error_page 503 @maintenance;
+  location @maintenance {
+    rewrite  ^(.*)$  /system/maintenance.html last;
+    break;
+  }
+
+  location ~ ^/(assets)/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+    add_header Last-Modified "";
+    add_header ETag "";
+  }
+
+  location @rails {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_pass http://<%= app %>;
+  }
+
+  try_files $uri/index.html $uri @rails;
+
+  error_page 500 502 503 504 /500.html;
+}

@@ -1,0 +1,9 @@
+:verbose: false
+:namespace: sidekiq
+:concurrency:  <%= sidekiq_concurrency %>
+:queues:
+  - [high, 7]
+  - [low, 5]
+  - [default, 3]
+:limits:
+  low: <%= (sidekiq_concurrency*0.4).to_i %>

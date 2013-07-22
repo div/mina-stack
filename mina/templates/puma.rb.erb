@@ -1,0 +1,14 @@
+# Bind to a UNIX socket
+bind "unix://<%= puma_socket %>"
+activate_control_app "unix://<%= sockets_path %>/pumactl.sock"
+daemonize true
+environment "<%= rails_env %>"
+directory '<%= "#{deploy_to!}/#{current_path!}" %>'
+pidfile "<%= puma_pid %>"
+state_path "<%= sockets_path %>/puma.state"
+
+workers <%= puma_workers %>
+
+
+# 0-16 threads for production environment
+# threads 0, 16
