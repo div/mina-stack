@@ -9,8 +9,6 @@ task :defaults do
                                     tmp
                                     log
                                     config/puma.rb
-                                    config/database.yml
-                                    config/application.yml
                                     config/sidekiq.yml
                                     public/uploads
                                     app/assets/stylesheets/sites
