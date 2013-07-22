@@ -9,9 +9,12 @@ set_default :server_stack,          %w(
                                       nginx
                                       postgresql
                                       redis
+                                      rails
                                       puma
                                       sidekiq
                                       private_pub
+                                      elastc_search
+                                      imagemagick
                                       monit
                                       bower
                                     )
