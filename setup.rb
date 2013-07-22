@@ -2,17 +2,17 @@ task :initial_setup => :environment do
   invoke :create_extra_paths
   invoke :create_config_files
   invoke :setup
-  invoke :'psql:setup'
+  invoke :'psql:initial_setup'
 end
 
-task :setup => :environment do
-  invoke :'nginx:setup'
-  invoke :'puma:setup'
-  invoke :'sidekiq:setup'
-  invoke :'private_pub:setup'
-  # invoke :'monit:setup'
+%w(install setup).each do |action|
+  desc "#{action.capitalize} Server Stack Services"
+  task action.to_sym => :environment do
+    server_stack.each do |service|
+      invoke :"#{service}:#{action}"
+    end
+  end
 end
-
 
 desc 'Create extra paths for shared configs, pids, sockets, etc.'
 task :create_extra_paths do

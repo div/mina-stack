@@ -6,6 +6,8 @@ namespace :libcurl do
     queue "sudo apt-get -y install curl libcurl3 libcurl3-dev"
   end
 
+  task(:setup) {  }
+
 end
 
 namespace :libxml do
@@ -15,5 +17,6 @@ namespace :libxml do
     invoke :sudo
     queue "sudo apt-get -y install libxml2 libxml2-dev libxslt1-dev"
   end
+  task(:setup) {  }
 
 end

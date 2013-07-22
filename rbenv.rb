@@ -1,4 +1,5 @@
 namespace :rbenv do
+
   desc "Install rbenv, Ruby, and the Bundler gem"
   task :install do
     invoke :sudo
@@ -22,4 +23,6 @@ namespace :rbenv do
     queue "gem install bundler --no-ri --no-rdoc"
     queue "rbenv rehash"
   end
+
+  task(:setup) {  }
 end

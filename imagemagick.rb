@@ -6,4 +6,6 @@ namespace :imagemagick do
     queue "sudo apt-get install imagemagick libmagickwand-dev -y"
   end
 
+  task(:setup) {  }
+
 end

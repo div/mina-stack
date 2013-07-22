@@ -18,6 +18,8 @@ namespace :es do
     queue "sudo ln -s `readlink -f /usr/local/share/elasticsearch/bin/service/elasticsearch` /usr/local/bin/rcelasticsearch"
   end
 
+  task(:setup) {  }
+
   %w[start stop restart].each do |command|
     desc "#{command} elasticsearch"
     task command do

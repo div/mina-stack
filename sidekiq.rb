@@ -1,5 +1,7 @@
 namespace :sidekiq do
 
+  task(:install) {  }
+
   desc "Setup sidekiq configuration"
   task :setup => [:upload]
 
@@ -21,7 +23,7 @@ namespace :sidekiq do
   task :stop do
     queue %[ if [ -f #{sidekiq_pid} ]; then
       echo "-----> Stop sidekiq"
-      #{echo_cmd %[(cd #{deploy_to}/#{current_path} && #{sidekiqctl_cmd} stop #{sidekiq_pid} #{sidekiq_timeout})]}
+      #{echo_cmd %[ sidekiq_stop ]}
       fi ]
   end
 
@@ -29,7 +31,7 @@ namespace :sidekiq do
   task :start do
     queue %{
       echo "-----> Start sidekiq"
-      #{echo_cmd %[(cd #{deploy_to}/#{current_path}; nohup #{sidekiq_cmd} -e #{rails_env} -C #{sidekiq_config} -P #{sidekiq_pid} >> #{sidekiq_log} 2>&1 </dev/null &) ] }
+      #{echo_cmd %[ sidekiq_start ] }
       }
   end
 

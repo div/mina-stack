@@ -1,5 +1,7 @@
 namespace :puma do
 
+  task(:install) {  }
+
   desc "Setup Puma configuration"
   task :setup => [:upload]
 

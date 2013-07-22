@@ -7,9 +7,7 @@ namespace :bower do
     queue "sudo npm install -g bower"
   end
 
-  desc "Setup bower paths"
-  task :setup do
-  end
+  task(:setup) {  }
 
   desc "Install assets"
   task :install_assets do

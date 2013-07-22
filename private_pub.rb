@@ -1,5 +1,7 @@
 namespace :private_pub do
 
+  task(:install) {  }
+
   desc "Setup Private Pub configuration"
   task :setup => [:upload]
 

@@ -1,4 +1,7 @@
 namespace :unicorn do
+
+  task(:install) {  }
+
   desc "Setup Unicorn initializer and app configuration"
   task :setup do
     invoke :sudo

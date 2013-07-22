@@ -9,6 +9,8 @@ namespace :redis do
     queue "sudo apt-get -y install redis-server"
   end
 
+  task(:setup) {  }
+
   %w[start stop restart].each do |command|
     desc "#{command} redis"
     task command do
