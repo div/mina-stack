@@ -1,10 +1,10 @@
 upstream <%= app %> {
-  server unix://<%= puma_socket %> fail_timeout=0;
+  server unix://<%= rails_socket %> fail_timeout=0;
 }
 
 server {
   # listen 80 default deferred;
-  server_name folify.com;
+  server_name <%= server_name %>;
   keepalive_timeout 5;
 
   root <%= deploy_to %>/<%= current_path %>/public;

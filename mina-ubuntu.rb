@@ -23,3 +23,5 @@ set_default :server_stack,          %w(
 server_stack.each do |service|
   require "mina-ubuntu/#{service}"
 end
+
+set_default :rails_socket, { server_stack.include?(:puma) ? puma_socket : unicorn_socket }
