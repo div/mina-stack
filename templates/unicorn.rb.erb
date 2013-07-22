@@ -1,0 +1,52 @@
+<%
+# Sample simple conf
+# working_directory "/vagrant"
+# pid "/vagrant/tmp/pids/unicorn.pid"
+# stderr_path "/vagrant/log/unicorn.log"
+# stdout_path "/vagrant/log/unicorn.log"
+# listen "/tmp/unicorn.photoapp.sock"
+# worker_processes 2
+# timeout 30
+%>
+
+rails_root = "<%= "#{deploy_to!}/#{current_path!}" %>"
+rails_env  = "<%= rails_env %>"
+pid_file   = "<%= unicorn_pid %>"
+socket_file= "<%= unicorn_socket %>"
+log_file   = "<%= unicorn_log %>"
+err_log    = "<%= unicorn_error_log %>"
+old_pid    = pid_file + '.oldbin'
+
+timeout 60
+worker_processes <%= unicorn_workers %>
+
+# Listen on a Unix data socket
+listen socket_file, :backlog => 2048
+pid pid_file
+
+stderr_path err_log
+stdout_path log_file
+
+preload_app true
+
+GC.copy_on_write_friendly = true if GC.respond_to?(:copy_on_write_friendly=)
+
+before_exec do |server|
+  ENV["BUNDLE_GEMFILE"] = "#{rails_root}/Gemfile"
+end
+
+before_fork do |server, worker|
+  # Using this method we get 0 downtime deploys.
+  if File.exists?(old_pid) && server.pid != old_pid
+    begin
+      Process.kill("QUIT", File.read(old_pid).to_i)
+    rescue Errno::ENOENT, Errno::ESRCH
+      # someone else did our job for us
+    end
+  end
+end
+
+after_fork do |server, worker|
+  child_pid = server.config[:pid].sub('.pid', ".#{worker.nr}.pid")
+  system("echo #{Process.pid} > #{child_pid}")
+end

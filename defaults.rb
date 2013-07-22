@@ -1,4 +1,5 @@
 task :defaults do
+  set_default :services_path,   "/etc/init.d"
   set_default :sockets_path,    "#{deploy_to}/#{shared_path}/tmp/sockets"
   set_default :pids_path,       "#{deploy_to}/#{shared_path}/tmp/pids"
   set_default :logs_path,       "#{deploy_to}/#{shared_path}/log"
@@ -19,6 +20,18 @@ task :defaults do
   set_default :puma_log,  "#{logs_path}/puma.log"
   set_default :puma_socket,  "#{sockets_path}/puma.sock"
   set_default :puma_workers, 2
+
+  set_default :unicorn_name,          "unicorn_#{app!}_#{rails_env!}"
+  set_default :unicorn_socket,        "#{sockets_path}/unicorn.sock"
+  set_default :unicorn_pid,           "#{pids_path}/unicorn.pid"
+  set_default :unicorn_config,        "#{config_path}/unicorn.rb"
+  set_default :unicorn_log,           "#{logs_path}/unicorn.log"
+  set_default :unicorn_error_log,     "#{logs_path}/unicorn.error.log"
+  set_default :unicorn_script,  "#{services_path!}/#{unicorn_name}"
+  set_default :unicorn_workers, 1
+  set_default :unicorn_bin,   'bundle exec unicorn' # you may prefer this over the line below
+  set_default :unicorn_user,    user
+  set_default :unicorn_group,   user
 
   set_default :nginx_config,    "#{nginx_path!}/sites-available/#{app!}_#{rails_env!}.conf"
   set_default :nginx_config_e,  "#{nginx_path!}/sites-enabled/#{app!}_#{rails_env!}.conf"
