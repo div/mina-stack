@@ -55,11 +55,17 @@ task :defaults do
   set_default :private_pub_log,       "#{logs_path}/private_pub.log"
 
   set_default :monit_config_path,     "/etc/monit/conf.d"
-  set_default :monitored,             %w(
-                                          nginx
-                                          postgresql
-                                          redis
-                                          puma
-                                          sidekiq
-                                        )
+
+  set_default :server_stack,          %w(
+                                        nginx
+                                        postgresql
+                                        redis
+                                        puma
+                                        sidekiq
+                                        private_pub
+                                        monit
+                                        bower
+                                      )
+
+  set_default :monitored,             server_stack.reject('monit', 'bower')
 end
