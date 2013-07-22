@@ -5,27 +5,28 @@ namespace :monit do
     queue %{echo "-----> Installing Monit..."}
     queue "sudo apt-get -y install monit"
   end
-  after "deploy:install", "monit:install"
 
   desc "Setup all Monit configuration"
   task :setup do
-    queue %{echo "-----> Setting up Monit..."}
-    monit_config "monitrc", "/etc/monit/monitrc"
-    # invoke :'monit:nginx'
-    # invoke :'monit:postgresql'
-    # invoke :'monit:redis'
-    invoke :'monit:puma'
-    # invoke :'monit:sidekiq'
-    invoke :'monit:syntax'
-    invoke :'monit:restart'
+    if monitored.any?
+      queue %{echo "-----> Setting up Monit..."}
+      monit_config "monitrc", "/etc/monit/monitrc"
+      monitored.each do |deamon|
+        invoke :"monit:#{deamon}"
+      end
+      invoke :'monit:syntax'
+      invoke :'monit:restart'
+    else
+      queue %{echo "-----> Skiping monit - nothing is set for monitoring..."}
+    end
   end
-  after "deploy:setup", "monit:setup"
 
   task(:nginx) { monit_config "nginx" }
   task(:postgresql) { monit_config "postgresql" }
   task(:redis) { monit_config "redis" }
-  task(:puma) { monit_config "puma", "/etc/monit/conf.d/puma_#{app}.conf" }
-  task(:sidekiq) { monit_config "sidekiq", "/etc/monit/conf.d/sidekiq_#{app}.conf" }
+  task(:puma) { monit_config "puma", "#{puma_name}.conf" }
+  task(:unicorn) { monit_config "unicorn", "#{unicorn_name}.conf" }
+  task(:sidekiq) { monit_config "sidekiq", "#{sidekiq_name}.conf" }
 
   %w[start stop restart syntax reload].each do |command|
     desc "Run Monit #{command} script"
@@ -36,10 +37,11 @@ namespace :monit do
   end
 end
 
-def monit_config(name, destination = nil)
-  destination ||= "/etc/monit/conf.d/#{name}.conf"
-  template "monit/#{name}.erb", "/tmp/monit_#{name}"
-  queue "sudo mv /tmp/monit_#{name} #{destination}"
+def monit_config(origin_name, destination_name = nil)
+  destination_name ||= origin_name
+  destination = "#{monit_config_path}/#{destination_name}.conf"
+  template "monit/#{origin_name}.erb", "/tmp/monit_#{origin_name}"
+  queue "sudo mv /tmp/monit_#{origin_name} #{destination}"
   queue "sudo chown root #{destination}"
   queue "sudo chmod 600 #{destination}"
 end
