@@ -9,9 +9,7 @@ task :defaults do
                                     tmp
                                     log
                                     config/puma.rb
-                                    config/sidekiq.yml
                                     public/uploads
-                                    app/assets/stylesheets/sites
                                   )
 
   set_default :config_templates_path, "lib/mina/templates"
