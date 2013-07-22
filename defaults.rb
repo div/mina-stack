@@ -8,7 +8,6 @@ task :defaults do
   set_default :shared_paths,    %w(
                                     tmp
                                     log
-                                    config/puma.rb
                                     public/uploads
                                   )
 
