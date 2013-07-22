@@ -56,17 +56,6 @@ task :defaults do
 
   set_default :monit_config_path,     "/etc/monit/conf.d"
 
-  set_default :server_stack,          %w(
-                                        nginx
-                                        postgresql
-                                        redis
-                                        puma
-                                        sidekiq
-                                        private_pub
-                                        monit
-                                        bower
-                                      )
-
   set_default :monitored,             %w(
                                           nginx
                                           postgresql
