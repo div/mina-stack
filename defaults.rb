@@ -67,5 +67,12 @@ task :defaults do
                                         bower
                                       )
 
-  set_default :monitored,             server_stack.reject('monit', 'bower')
+  set_default :monitored,             %w(
+                                          nginx
+                                          postgresql
+                                          redis
+                                          puma
+                                          sidekiq
+                                          private_pub
+                                        )
 end
