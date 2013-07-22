@@ -1,7 +1,6 @@
 require 'mina-ubuntu/defaults'
 require 'mina-ubuntu/base'
 require 'mina-ubuntu/setup'
-require 'mina-ubuntu/logs'
 
 Dir['config/servers/*.rb'].each { |f| load f }
 
