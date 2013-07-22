@@ -15,6 +15,7 @@ set_default :server_stack,          %w(
                                       private_pub
                                       elastc_search
                                       imagemagick
+                                      memcached
                                       monit
                                       bower
                                     )

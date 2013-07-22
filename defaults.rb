@@ -63,5 +63,6 @@ task :defaults do
                                           puma
                                           sidekiq
                                           private_pub
+                                          memcached
                                         )
 end
