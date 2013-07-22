@@ -13,7 +13,7 @@ set_default :server_stack,          %w(
                                       puma
                                       sidekiq
                                       private_pub
-                                      elastc_search
+                                      elastic_search
                                       imagemagick
                                       memcached
                                       monit
