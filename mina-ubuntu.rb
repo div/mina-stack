@@ -16,6 +16,6 @@ set_default :server_stack,          %w(
                                       bower
                                     )
 
-server_stack.each do |app|
-  require "mina-ubuntu/#{app}"
+server_stack.each do |service|
+  require "mina-ubuntu/#{service}"
 end

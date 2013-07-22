@@ -2,6 +2,7 @@ namespace :monit do
 
   desc "Install Monit"
   task :install do
+    invoke :sudo
     queue %{echo "-----> Installing Monit..."}
     queue "sudo apt-get -y install monit"
   end
