@@ -48,6 +48,8 @@ task :defaults do
   set_default :sidekiq_log,           "#{logs_path}/sidekiq.log"
   set_default :sidekiq_pid,           "#{pids_path}/sidekiq.pid"
   set_default :sidekiq_concurrency,   10
+  set_default :sidekiq_start,         "(cd #{deploy_to}/#{current_path}; nohup #{sidekiq_cmd} -e #{rails_env} -C #{sidekiq_config} -P #{sidekiq_pid} >> #{sidekiq_log} 2>&1 </dev/null &)"
+  set_default :sidekiq_stop,          "(cd #{deploy_to}/#{current_path} && #{sidekiqctl_cmd} stop #{sidekiq_pid} #{sidekiq_timeout})"
 
   set_default :private_pub_name,      "private_pub_#{app!}_#{rails_env!}"
   set_default :private_pub_cmd,       lambda { "#{bundle_prefix} rackup private_pub.ru" }

@@ -1,0 +1,16 @@
+# run as a daemon
+-d
+
+logfile /var/log/memcached.log
+
+# memory limit
+-m <%= memcached_memory_limit %>
+
+# port
+-p 11211
+
+# user
+-u memcache
+
+# listen only on localhost (for security)
+-l 127.0.0.1

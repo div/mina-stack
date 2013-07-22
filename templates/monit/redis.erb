@@ -1,0 +1,4 @@
+check process redis
+  with pidfile /var/run/redis/redis-server.pid
+  if failed host 127.0.0.1 port 6379 then restart
+  if 5 restarts within 5 cycles then timeout

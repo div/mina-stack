@@ -1,0 +1,8 @@
+check process memcached with pidfile /var/run/memcached/memcached.pid
+  start program = "/etc/init.d/memcached start"
+  stop program = "/etc/init.d/memcached stop"
+  if failed host 127.0.0.1 port 11211 then restart
+  if cpu > 60% for 2 cycles then alert
+  if cpu > 98% for 5 cycles then restart
+  if 2 restarts within 3 cycles then timeout
+  group cache
