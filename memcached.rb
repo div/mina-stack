@@ -14,7 +14,7 @@ namespace :memcached do
 
   %w[start stop restart].each do |command|
     desc "#{command} Memcached"
-    task command, roles: :app do
+    task command do
       queue "sudo service memcached #{command}"
     end
   end
