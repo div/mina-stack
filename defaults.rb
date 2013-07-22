@@ -1,4 +1,5 @@
 task :defaults do
+  set_default :ruby_version,          "2.0.0-p247"
   set_default :services_path,         "/etc/init.d"
   set_default :sockets_path,          "#{deploy_to}/#{shared_path}/tmp/sockets"
   set_default :pids_path,             "#{deploy_to}/#{shared_path}/tmp/pids"

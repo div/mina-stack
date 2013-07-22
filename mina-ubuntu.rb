@@ -10,6 +10,7 @@ set_default :server_stack,          %w(
                                       postgresql
                                       redis
                                       rails
+                                      rbenv
                                       puma
                                       sidekiq
                                       private_pub
