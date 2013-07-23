@@ -30,4 +30,28 @@ namespace :psql do
     end
   end
 
+  RYAML = <<-BASH
+  function ryaml {
+    ruby -ryaml -e 'puts ARGV[1..-1].inject(YAML.load(File.read(ARGV[0]))) {|acc, key| acc[key] }' "$@"
+  };
+  BASH
+
+  task :pull do
+    isolate do
+      queue RYAML
+      queue "USERNAME=$(ryaml ./shared/config/database.yml #{rails_env} username)"
+      queue "PASSWORD=$(ryaml ./shared/config/database.yml #{rails_env} password)"
+      queue "DATABASE=$(ryaml ./shared/config/database.yml #{rails_env} database)"
+      queue "PGPASSWORD=$PASSWORD pg_dump -U $USERNAME $DATABASE -c -f dump.sql"
+      queue "gzip -f dump.sql"
+
+      mina_cleanup!
+    end
+
+    %x[scp #{user}@#{domain}:#{deploy_to}/dump.sql.gz .]
+    %x[gunzip -f dump.sql.gz]
+    %x[#{RYAML} psql -d $(ryaml config/database.yml development database) -f dump.sql]
+    %x[rm dump.sql]
+  end
+
 end
