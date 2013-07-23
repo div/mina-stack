@@ -12,7 +12,7 @@ namespace :psql do
 
   task(:setup) {  }
 
-  task(:initial_setup) => [:upload, :create_db]
+  task :initial_setup => [:upload, :create_db]
 
   desc "Create configuration and other files"
   task :upload do
