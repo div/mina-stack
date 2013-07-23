@@ -9,10 +9,18 @@ Sidekiq, Memcached, Imagemagick, ElasticSearch, Bower and Monit.
 ## Installation
 
 You will need mina installed, then
-just clone this repo in your lib directory and add 
+just clone this repo in your lib directory as a submodule with
+```
+git submodule add git://github.com/div/mina-ubuntu.git lib/mina-ubuntu
+```
+
+and add 
+
 ```
 require 'mina-ubuntu/mina-ubuntu' 
 ```
+
+to deploy.rb
 
 ## Configuration
 
