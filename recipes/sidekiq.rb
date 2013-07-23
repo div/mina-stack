@@ -23,7 +23,7 @@ namespace :sidekiq do
   task :stop do
     queue %[ if [ -f #{sidekiq_pid} ]; then
       echo "-----> Stop sidekiq"
-      #{echo_cmd %[ sidekiq_stop ]}
+      #{echo_cmd sidekiq_stop}
       fi ]
   end
 
@@ -31,7 +31,7 @@ namespace :sidekiq do
   task :start do
     queue %{
       echo "-----> Start sidekiq"
-      #{echo_cmd %[ sidekiq_start ] }
+      #{echo_cmd sidekiq_start}
       }
   end
 
