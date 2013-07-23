@@ -15,14 +15,14 @@ task :defaults do
 
   set_default :config_templates_path, "lib/mina-ubuntu/templates"
 
-  set_default :puma_name,             "puma_#{app!}_#{rails_env!}"
+  set_default :puma_name,             "puma_#{app!}"
   set_default :puma_config,           "#{config_path}/puma.rb"
   set_default :puma_pid,              "#{pids_path}/puma.pid"
   set_default :puma_log,              "#{logs_path}/puma.log"
   set_default :puma_socket,           "#{sockets_path}/puma.sock"
   set_default :puma_workers,          2
 
-  set_default :unicorn_name,          "unicorn_#{app!}_#{rails_env!}"
+  set_default :unicorn_name,          "unicorn_#{app!}"
   set_default :unicorn_socket,        "#{sockets_path}/unicorn.sock"
   set_default :unicorn_pid,           "#{pids_path}/unicorn.pid"
   set_default :unicorn_config,        "#{config_path}/unicorn.rb"
@@ -34,13 +34,13 @@ task :defaults do
   set_default :unicorn_user,          user
   set_default :unicorn_group,         user
 
-  set_default :nginx_config,          "#{nginx_path!}/sites-available/#{app!}_#{rails_env!}.conf"
-  set_default :nginx_config_e,        "#{nginx_path!}/sites-enabled/#{app!}_#{rails_env!}.conf"
+  set_default :nginx_config,          "#{nginx_path!}/sites-available/#{app!}.conf"
+  set_default :nginx_config_e,        "#{nginx_path!}/sites-enabled/#{app!}.conf"
 
   set_default :psql_user,             "#{app!}"
   set_default :psql_database,         "#{app!}_#{rails_env}"
 
-  set_default :sidekiq_name,          "sidekiq_#{app!}_#{rails_env!}"
+  set_default :sidekiq_name,          "sidekiq_#{app!}"
   set_default :sidekiq_cmd,           lambda { "#{bundle_bin} exec sidekiq" }
   set_default :sidekiqctl_cmd,        lambda { "#{bundle_prefix} sidekiqctl" }
   set_default :sidekiq_timeout,       10
@@ -51,7 +51,7 @@ task :defaults do
   set_default :sidekiq_start,         "(cd #{deploy_to}/#{current_path}; nohup #{sidekiq_cmd} -e #{rails_env} -C #{sidekiq_config} -P #{sidekiq_pid} >> #{sidekiq_log} 2>&1 </dev/null &)"
   set_default :sidekiq_stop,          "(cd #{deploy_to}/#{current_path} && #{sidekiqctl_cmd} stop #{sidekiq_pid} #{sidekiq_timeout})"
 
-  set_default :private_pub_name,      "private_pub_#{app!}_#{rails_env!}"
+  set_default :private_pub_name,      "private_pub_#{app!}"
   set_default :private_pub_cmd,       lambda { "#{bundle_prefix} rackup private_pub.ru" }
   set_default :private_pub_pid,       "#{pids_path}/private_pub.pid"
   set_default :private_pub_config,    "#{config_path}/private_pub.yml"
