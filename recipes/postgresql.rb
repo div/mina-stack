@@ -25,6 +25,7 @@ namespace :psql do
     queue %{echo "-----> Create database"}
     invoke :sudo
     ask "PostgreSQL password:" do |psql_password|
+      psql_password.echo = "x"
       queue echo_cmd %{sudo -u postgres psql -c "create user #{psql_user} with password '#{psql_password}';"}
       queue echo_cmd %{sudo -u postgres psql -c "create database #{psql_database} owner #{psql_user};"}
     end
