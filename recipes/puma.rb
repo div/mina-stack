@@ -13,7 +13,10 @@ namespace :puma do
 
   desc "Start puma"
   task :start => :environment do
-    queue "bundle exec puma -C #{puma_config} >> #{puma_log} 2>&1 &"
+    queue %{
+      echo "-----> Start puma"
+      #{echo_cmd puma_start}
+      }
   end
 
   desc "Stop puma"
