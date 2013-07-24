@@ -17,11 +17,11 @@ task :defaults do
 
   set_default :puma_name,             "puma_#{app!}"
   set_default :puma_cmd,              lambda { "#{bundle_bin} exec puma" }
-  set_default :puma_start,            "cd #{deploy_to}/#{current_path} && #{puma_cmd} -C #{puma_config} >> #{puma_log} 2>&1 &"
   set_default :puma_config,           "#{config_path}/puma.rb"
   set_default :puma_pid,              "#{pids_path}/puma.pid"
   set_default :puma_log,              "#{logs_path}/puma.log"
   set_default :puma_socket,           "#{sockets_path}/puma.sock"
+  set_default :puma_start,            "cd #{deploy_to}/#{current_path} && #{puma_cmd} -C #{puma_config} >> #{puma_log} 2>&1 &"
   set_default :puma_workers,          2
 
   set_default :unicorn_name,          "unicorn_#{app!}"
