@@ -9,7 +9,7 @@ namespace :unicorn do
     template "unicorn_init.erb", "/tmp/unicorn_init"
     queue "chmod +x /tmp/unicorn_init"
     queue "sudo mv /tmp/unicorn_init #{unicorn_script}"
-    queue "sudo update-rc.d -f #{unicorn_script} defaults"
+    queue "sudo update-rc.d -f #{unicorn_name} defaults"
   end
 
   %w[start stop restart].each do |command|
