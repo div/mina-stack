@@ -25,6 +25,7 @@ namespace :monit do
   task(:nginx) { monit_config "nginx" }
   task(:postgresql) { monit_config "postgresql" }
   task(:redis) { monit_config "redis" }
+  task(:memcached) { monit_config "memcached" }
   task(:puma) { monit_config "puma", "#{puma_name}.conf" }
   task(:unicorn) { monit_config "unicorn", "#{unicorn_name}.conf" }
   task(:sidekiq) { monit_config "sidekiq", "#{sidekiq_name}.conf" }
