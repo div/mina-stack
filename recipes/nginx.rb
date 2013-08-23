@@ -3,6 +3,15 @@
 ###########################################################################
 
 namespace :nginx do
+
+  desc "Install latest stable release of nginx"
+  task :install do
+    invoke :sudo
+    queue "sudo add-apt-repository ppa:nginx/stable --yes"
+    queue "sudo apt-get -y update"
+    queue "sudo apt-get -y install nginx"
+  end
+
   desc "Create configuration and other files"
   task :setup => [:update]
 
