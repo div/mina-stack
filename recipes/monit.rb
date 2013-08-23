@@ -28,6 +28,7 @@ namespace :monit do
   task(:puma) { monit_config "puma", "#{puma_name}.conf" }
   task(:unicorn) { monit_config "unicorn", "#{unicorn_name}.conf" }
   task(:sidekiq) { monit_config "sidekiq", "#{sidekiq_name}.conf" }
+  task(:private_pub) { monit_config "private_pub", "#{private_pub_name}.conf" }
 
   %w[start stop restart syntax reload].each do |command|
     desc "Run Monit #{command} script"
