@@ -1,4 +1,4 @@
-namespace :psql do
+namespace :postgresql do
 
   require 'highline/import'
 
