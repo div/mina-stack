@@ -1,14 +1,3 @@
-<%
-# Sample simple conf
-# working_directory "/vagrant"
-# pid "/vagrant/tmp/pids/unicorn.pid"
-# stderr_path "/vagrant/log/unicorn.log"
-# stdout_path "/vagrant/log/unicorn.log"
-# listen "/tmp/unicorn.photoapp.sock"
-# worker_processes 2
-# timeout 30
-%>
-
 rails_root = "<%= "#{deploy_to!}/#{current_path!}" %>"
 rails_env  = "<%= rails_env %>"
 pid_file   = "<%= unicorn_pid %>"

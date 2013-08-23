@@ -86,6 +86,7 @@ task :defaults do
                                         memcached
                                         monit
                                         bower
+                                        node
                                       )
 
 end
