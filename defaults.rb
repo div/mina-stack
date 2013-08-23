@@ -33,6 +33,7 @@ task :defaults do
   set_default :unicorn_script,        "#{services_path!}/#{unicorn_name}"
   set_default :unicorn_workers,       1
   set_default :unicorn_bin,           lambda { "#{bundle_bin} exec unicorn" }
+  set_default :unicorn_cmd,           "cd #{deploy_to}/#{current_path} && #{unicorn_bin} -D -c #{unicorn_config} -E #{rails_env}"
   set_default :unicorn_user,          user
   set_default :unicorn_group,         user
 
