@@ -70,4 +70,21 @@ task :defaults do
                                           private_pub
                                           memcached
                                         )
+
+  set_default :server_stack,          %w(
+                                        nginx
+                                        postgresql
+                                        redis
+                                        rails
+                                        rbenv
+                                        puma
+                                        sidekiq
+                                        private_pub
+                                        elastic_search
+                                        imagemagick
+                                        memcached
+                                        monit
+                                        bower
+                                      )
+
 end
