@@ -15,6 +15,7 @@ TIMEOUT=60
 APP_ROOT="<%= "#{deploy_to!}/#{current_path!}" %>"
 PID="<%= unicorn_pid %>"
 CMD="<%= unicorn_cmd %>"
+AS_USER="<%= unicorn_user %>"
 ENVIRONMENT="<%= rails_env %>"
 CONFIG="<%= unicorn_config %>"
 set -u
