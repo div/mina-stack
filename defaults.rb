@@ -41,6 +41,7 @@ task :defaults do
 
   set_default :psql_user,             "#{app!}"
   set_default :psql_database,         "#{app!}_#{rails_env}"
+  set_default :postgresql_pid,         "/var/postgres/postmaster.pid"
 
   set_default :sidekiq_name,          "sidekiq_#{app!}"
   set_default :sidekiq_cmd,           lambda { "#{bundle_bin} exec sidekiq" }

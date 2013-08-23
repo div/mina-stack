@@ -2,7 +2,7 @@ task :initial_setup => :environment do
   invoke :create_extra_paths
   invoke :create_config_files
   invoke :setup
-  invoke :'psql:initial_setup'
+  invoke :'postgresql:initial_setup'
 end
 
 %w(install setup).each do |action|
