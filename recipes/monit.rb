@@ -26,10 +26,10 @@ namespace :monit do
   task(:postgresql) { monit_config "postgresql" }
   task(:redis) { monit_config "redis" }
   task(:memcached) { monit_config "memcached" }
-  task(:puma) { monit_config "puma", "#{puma_name}.conf" }
-  task(:unicorn) { monit_config "unicorn", "#{unicorn_name}.conf" }
-  task(:sidekiq) { monit_config "sidekiq", "#{sidekiq_name}.conf" }
-  task(:private_pub) { monit_config "private_pub", "#{private_pub_name}.conf" }
+  task(:puma) { monit_config "puma", "#{puma_name}" }
+  task(:unicorn) { monit_config "unicorn", "#{unicorn_name}" }
+  task(:sidekiq) { monit_config "sidekiq", "#{sidekiq_name}" }
+  task(:private_pub) { monit_config "private_pub", "#{private_pub_name}" }
 
   %w[start stop restart syntax reload].each do |command|
     desc "Run Monit #{command} script"

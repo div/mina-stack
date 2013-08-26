@@ -15,7 +15,7 @@ set eventqueue
 
 # set alert foo@example.com
 
-# set httpd port 2812
-#    allow foo:"bar"
+set httpd port <%= monit_http_port %>
+  allow <%= monit_http_username %>:"<%= monit_http_password %>"
 
 include /etc/monit/conf.d/*
