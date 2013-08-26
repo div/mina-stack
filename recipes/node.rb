@@ -8,4 +8,5 @@ namespace :node do
     queue "sudo apt-get -y update"
     queue "sudo apt-get -y install nodejs"
   end
+  task(:setup) {  }
 end
