@@ -9,6 +9,7 @@ namespace :monit do
 
   desc "Setup all Monit configuration"
   task :setup do
+    invoke :sudo
     if monitored.any?
       queue %{echo "-----> Setting up Monit..."}
       monit_config "monitrc", "/etc/monit/monitrc"
