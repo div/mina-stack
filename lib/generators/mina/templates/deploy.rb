@@ -3,7 +3,7 @@ require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
 require 'mina/rbenv'
-require 'mina-ubuntu/mina-ubuntu'
+require 'mina-stack'
 
 set :app,                 'example'
 set :server_name,         'example.com'
@@ -19,7 +19,6 @@ set :server_stack,                  %w(
                                       nginx
                                       postgresql
                                       redis
-                                      rails
                                       rbenv
                                       puma
                                       sidekiq
@@ -28,6 +27,7 @@ set :server_stack,                  %w(
                                       imagemagick
                                       memcached
                                       monit
+                                      node
                                       bower
                                     )
 
@@ -39,7 +39,6 @@ set :shared_paths,                  %w(
                                       config/application.yml
                                       config/sidekiq.yml
                                       public/uploads
-                                      app/assets/stylesheets/sites
                                     )
 
 set :monitored,                     %w(
