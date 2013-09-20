@@ -1,10 +1,12 @@
 namespace :node do
-  desc "Install the latest relase of Node.js with nvm"
+  desc "Install the latest relase of Node.js"
   task :install do
-    queue 'git clone git://github.com/creationix/nvm.git ~/.nvm'
-    queue %[echo '[[ -s "$HOME/.nvm/nvm.sh" ]] && source "$HOME/.nvm/nvm.sh"' >> ~/.bashrc]
-    queue 'nvm install 0.10'
-    queue 'nvm use 0.10'
+    invoke :sudo
+    queue "sudo apt-get -y update"
+    queue "sudo apt-get -y install software-properties-common python g++ make"
+    queue "sudo add-apt-repository ppa:chris-lea/node.js --yes"
+    queue "sudo apt-get -y update"
+    queue "sudo apt-get -y install nodejs"
   end
   task(:setup) {  }
 end

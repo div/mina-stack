@@ -4,8 +4,7 @@ namespace :bower do
   task :install do
     invoke :sudo
     queue %{echo "-----> Installing Bower..."}
-    queue "nvm use 0.10"
-    queue "npm install -g bower"
+    queue "sudo npm install -g bower"
   end
 
   task(:setup) {  }
