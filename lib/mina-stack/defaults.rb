@@ -8,13 +8,12 @@ task :defaults do
   set_default :app_namespace,         "#{app!}_#{rails_env!}"
 
   set_default :term_mode,             :pretty
-  set_default :shared_paths,          %w(
-                                        tmp
-                                        log
-                                        public/uploads
-                                      )
 
-  set_default :config_templates_path, "lib/mina-ubuntu/templates"
+  set_default :psql_user,             "#{app!}"
+  set_default :psql_database,         "#{app_namespace}"
+  set_default :postgresql_pid,        "/var/run/postgresql/9.1-main.pid"
+
+  set_default :memcached_pid,         "/var/run/memcached.pid"
 
   set_default :puma_name,             "puma_#{app_namespace!}"
   set_default :puma_cmd,              lambda { "#{bundle_bin} exec puma" }
@@ -41,10 +40,6 @@ task :defaults do
   set_default :nginx_config,          "#{nginx_path!}/sites-available/#{app_namespace!}.conf"
   set_default :nginx_config_e,        "#{nginx_path!}/sites-enabled/#{app_namespace!}.conf"
 
-  set_default :psql_user,             "#{app!}"
-  set_default :psql_database,         "#{app_namespace}"
-  set_default :postgresql_pid,         "/var/postgres/postmaster.pid"
-
   set_default :sidekiq_name,          "sidekiq_#{app_namespace!}"
   set_default :sidekiq_cmd,           lambda { "#{bundle_bin} exec sidekiq" }
   set_default :sidekiqctl_cmd,        lambda { "#{bundle_prefix} sidekiqctl" }
@@ -66,6 +61,12 @@ task :defaults do
   set_default :monit_http_port,       2812
   set_default :monit_http_username,   "PleaseChangeMe_monit"
   set_default :monit_http_password,   "PleaseChangeMe"
+
+  set_default :shared_paths,          %w(
+                                        tmp
+                                        log
+                                        public/uploads
+                                      )
 
   set_default :monitored,             %w(
                                         nginx

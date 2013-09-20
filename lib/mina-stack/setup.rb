@@ -1,3 +1,4 @@
+
 task :initial_setup => :environment do
   invoke :create_extra_paths
   invoke :create_config_files
