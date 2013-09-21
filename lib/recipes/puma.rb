@@ -17,7 +17,7 @@ namespace :puma do
   end
 
   %w[stop restart phased-restart].each do |command|
-    desc "#{command} puma"
+    desc "#{command.titelize} puma"
     task command do
       queue "#{pumactl_cmd} -S #{puma_state} #{command}"
     end
