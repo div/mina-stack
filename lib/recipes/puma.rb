@@ -11,28 +11,16 @@ namespace :puma do
     queue  %[echo "-----> Be sure to edit #{puma_config}."]
   end
 
-  desc "Start puma"
-  task :start => :environment do
-    queue %{
-      echo "-----> Start puma"
-      #{echo_cmd puma_start}
-      }
+  desc 'Start puma'
+  task :start do
+    queue "#{puma_cmd} -d -e #{rails_env} -C #{puma_config}"
   end
 
-  desc "Stop puma"
-  task :stop do
-    queue "kill -9 $(cat #{puma_pid})"
-  end
-
-  desc "Restart puma - zero downtime"
-  task :restart do
-    queue "kill -s USR1 $(cat #{puma_pid})"
-    # queue "cd #{full_current_path} && bundle exec pumactl -S #{full_shared_path}/sockets/puma.state restart"
-  end
-
-  desc "Restart puma -force"
-  task :force_restart do
-    queue "kill -s USR2 $(cat #{puma_pid})"
+  %w[stop restart phased_restart].each do |command|
+    desc "#{command} puma"
+    task command do
+      queue "#{pumactl_cmd} -S #{puma_state} #{command}"
+    end
   end
 
 end
