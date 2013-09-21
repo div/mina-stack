@@ -35,6 +35,7 @@ namespace :monit do
   %w[start stop restart syntax reload].each do |command|
     desc "Run Monit #{command} script"
     task command do
+      invoke :sudo
       queue %{echo "-----> Monit #{command}"}
       queue "sudo service monit #{command}"
     end
