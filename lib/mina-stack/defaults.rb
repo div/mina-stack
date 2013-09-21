@@ -6,6 +6,7 @@ task :defaults do
   set_default :logs_path,             "#{deploy_to}/#{shared_path}/log"
   set_default :config_path,           "#{deploy_to}/#{shared_path}/config"
   set_default :app_namespace,         "#{app!}_#{rails_env!}"
+  set_default :bundle,                "cd #{deploy_to}/#{current_path} && #{bundle_bin}"
 
   set_default :term_mode,             :pretty
 
@@ -16,8 +17,8 @@ task :defaults do
   set_default :memcached_pid,         "/var/run/memcached.pid"
 
   set_default :puma_name,             "puma_#{app_namespace!}"
-  set_default :puma_cmd,              lambda { "#{bundle_bin} exec puma" }
-  set_default :pumactl_cmd,           lambda { "#{bundle_bin} exec pumactl" }
+  set_default :puma_cmd,              lambda { "#{bundle} exec puma" }
+  set_default :pumactl_cmd,           lambda { "#{bundle} exec pumactl" }
   set_default :puma_config,           "#{config_path}/puma.rb"
   set_default :puma_pid,              "#{pids_path}/puma.pid"
   set_default :puma_log,              "#{logs_path}/puma.log"
