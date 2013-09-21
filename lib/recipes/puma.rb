@@ -16,7 +16,7 @@ namespace :puma do
     queue "#{puma_cmd} -d -e #{rails_env} -C #{puma_config}"
   end
 
-  %w[stop restart phased_restart].each do |command|
+  %w[stop restart phased-restart].each do |command|
     desc "#{command} puma"
     task command do
       queue "#{pumactl_cmd} -S #{puma_state} #{command}"
