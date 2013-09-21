@@ -1,5 +1,5 @@
 check process <%= puma_name %> with pidfile <%= puma_pid %>
-  start program = "/bin/sh -c <%= "#{pumactl_cmd} -S #{puma_state} start" %>"
+  start program = "/bin/sh -c <%= "#{puma_cmd} -d -e #{rails_env} -C #{puma_config}" %>"
   as uid <%= user %> and gid sudo
   stop program = "/bin/sh -c <%= "#{pumactl_cmd} -S #{puma_state} stop" %>"
   if cpu > 60% for 2 cycles then alert
