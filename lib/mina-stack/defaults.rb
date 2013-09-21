@@ -17,7 +17,7 @@ task :defaults do
 
   set_default :puma_name,             "puma_#{app_namespace!}"
   set_default :puma_cmd,              lambda { "#{bundle_bin} exec puma" }
-  set_default :pumactl_cmd            lambda { "#{bundle_bin} exec pumactl" }
+  set_default :pumactl_cmd,           lambda { "#{bundle_bin} exec pumactl" }
   set_default :puma_config,           "#{config_path}/puma.rb"
   set_default :puma_pid,              "#{pids_path}/puma.pid"
   set_default :puma_log,              "#{logs_path}/puma.log"
