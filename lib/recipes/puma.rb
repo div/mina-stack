@@ -7,6 +7,7 @@ namespace :puma do
 
   desc "Create configuration and other files"
   task :upload do
+    invoke :sudo
     template "puma.rb.erb", puma_config
     queue  %[echo "-----> Be sure to edit #{puma_config}."]
     template "upstart/puma.conf.erb", "/tmp/puma_conf"

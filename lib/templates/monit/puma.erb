@@ -1,7 +1,6 @@
 check process <%= puma_name %> with pidfile <%= puma_pid %>
-  as uid <%= user %>
-  start program = "service <%= puma_name %> start"
-  stop program =  "service <%= puma_name %> stop"
+  start program = "/sbin/start <%= puma_name %>"
+  stop program =  "/sbin/stop <%= puma_name %>"
   if cpu > 60% for 2 cycles then alert
   if cpu > 98% for 5 cycles then restart
   if 2 restarts within 3 cycles then timeout

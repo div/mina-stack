@@ -6,7 +6,7 @@ environment "<%= rails_env %>"
 directory '<%= "#{deploy_to!}/#{current_path!}" %>'
 pidfile "<%= puma_pid %>"
 state_path "<%= sockets_path %>/puma.state"
-stdout_redirect '<%= "#{deploy_to!}/#{current_path!}/#{puma_log}" %>', '<%= "#{deploy_to!}/#{current_path!}/#{puma_error_log}" %>', true
+stdout_redirect '<%= puma_log %>', '<%= puma_error_log %>', true
 
 workers <%= puma_workers %>
 preload_app!
