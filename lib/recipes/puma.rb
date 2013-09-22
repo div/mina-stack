@@ -17,8 +17,9 @@ namespace :puma do
   %w[start stop restart].each do |command|
     desc "#{command.capitalize} puma"
     task command do
+      # need to get rid of sudo here: have to figure out how it works with upstart
       invoke :sudo
-      queue "sbin/#{command} #{puma_name}"
+      queue "sudo service #{puma_name} #{command}"
     end
   end
 
