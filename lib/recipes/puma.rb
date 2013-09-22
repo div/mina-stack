@@ -9,6 +9,8 @@ namespace :puma do
   task :upload do
     template "puma.rb.erb", puma_config
     queue  %[echo "-----> Be sure to edit #{puma_config}."]
+    template "upstart/puma.conf.erb", "/tmp/puma_conf"
+    queue "sudo mv /tmp/puma_conf #{puma_upstart}"
   end
 
   desc 'Start puma'

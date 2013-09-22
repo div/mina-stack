@@ -1,6 +1,7 @@
 task :defaults do
   set_default :ruby_version,          "2.0.0-p247"
   set_default :services_path,         "/etc/init.d"
+  set_default :upstart_path,          "/etc/init"
   set_default :sockets_path,          "#{deploy_to}/#{shared_path}/tmp/sockets"
   set_default :pids_path,             "#{deploy_to}/#{shared_path}/tmp/pids"
   set_default :logs_path,             "#{deploy_to}/#{shared_path}/log"
@@ -25,6 +26,7 @@ task :defaults do
   set_default :puma_error_log,        "#{logs_path}/puma.err.log"
   set_default :puma_socket,           "#{sockets_path}/puma.sock"
   set_default :puma_state,            "#{sockets_path}/puma.state"
+  set_default :puma_upstart,          "#{upstart_path!}/#{puma_name}.conf"
   set_default :puma_workers,          2
 
   set_default :unicorn_name,          "unicorn_#{app_namespace!}"

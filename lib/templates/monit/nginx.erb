@@ -1,5 +1,5 @@
 check process nginx with pidfile /var/run/nginx.pid
-  start program = "/etc/init.d/nginx start"
-  stop program = "/etc/init.d/nginx stop"
+  start program = "service nginx start"
+  stop program = "service nginx stop"
   if children > 250 then restart
   if 5 restarts within 5 cycles then timeout
