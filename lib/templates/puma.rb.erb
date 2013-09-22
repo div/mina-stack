@@ -1,7 +1,9 @@
 # Bind to a UNIX socket
 bind "unix://<%= puma_socket %>"
 activate_control_app "unix://<%= sockets_path %>/pumactl.sock"
-daemonize true
+
+# not deamonizing here - still can use -d flag
+# daemonize true
 environment "<%= rails_env %>"
 directory '<%= "#{deploy_to!}/#{current_path!}" %>'
 pidfile "<%= puma_pid %>"
