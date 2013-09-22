@@ -14,16 +14,17 @@ namespace :puma do
     queue "sudo mv /tmp/puma_conf #{puma_upstart}"
   end
 
-  desc 'Start puma'
-  task :start do
-    queue "#{puma_cmd} -d -e #{rails_env} -C #{puma_config}"
-  end
-
-  %w[stop restart phased-restart].each do |command|
+  %w[start stop restart].each do |command|
     desc "#{command.capitalize} puma"
     task command do
-      queue "#{pumactl_cmd} -S #{puma_state} #{command}"
+      invoke :sudo
+      queue "sbin/#{command} #{puma_name}"
     end
+  end
+
+  desc "Phased-restart puma"
+  task :'phased-restart' do
+    queue "#{pumactl_cmd} -S #{puma_state} phased-restart"
   end
 
 end
