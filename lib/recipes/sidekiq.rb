@@ -7,37 +7,29 @@ namespace :sidekiq do
 
   desc "Create configuration and other files"
   task :upload do
+    invoke :sudo
     template "sidekiq.yml.erb", sidekiq_config
     queue  %[echo "-----> Be sure to edit #{sidekiq_config}."]
+    template "upstart/sidekiq.conf.erb", "/tmp/sidekiq_conf"
+    queue "sudo mv /tmp/sidekiq_conf #{sidekiq_upstart}"
   end
 
-  desc "Quiet sidekiq (stop accepting new work)"
-  task :quiet do
-    queue %{ if [ -f #{sidekiq_pid} ]; then
-      echo "-----> Quiet sidekiq (stop accepting new work)"
-      #{echo_cmd %{(cd #{deploy_to}/#{current_path} && #{sidekiqctl_cmd} quiet #{sidekiq_pid})} }
-      fi }
+  %w[quiet restart].each do |command|
+    desc "#{command.capitalize} sidekiq"
+    task command do
+      queue %{ if [ -f #{sidekiq_pid} ]; then
+        echo "-----> #{command.capitalize} sidekiq"
+        #{echo_cmd %{(cd #{deploy_to}/#{current_path} && #{sidekiqctl_cmd} #{command} #{sidekiq_pid})} }
+        fi }
+    end
   end
 
-  desc "Stop sidekiq"
-  task :stop do
-    queue %[ if [ -f #{sidekiq_pid} ]; then
-      echo "-----> Stop sidekiq"
-      #{echo_cmd sidekiq_stop}
-      fi ]
-  end
-
-  desc "Start sidekiq"
-  task :start do
-    queue %{
-      echo "-----> Start sidekiq"
-      #{echo_cmd sidekiq_start}
-      }
-  end
-
-  desc "Restart sidekiq"
-  task :restart do
-    invoke :'sidekiq:stop'
-    invoke :'sidekiq:start'
+  %w[start stop].each do |command|
+    desc "#{command.capitalize} sidekiq"
+    task command do
+      # need to get rid of sudo here: have to figure out how it works with upstart
+      invoke :sudo
+      queue "sudo service #{sidekiq_name} #{command}"
+    end
   end
 end

@@ -12,9 +12,8 @@ namespace :monit do
     invoke :sudo
     if monitored.any?
       queue %{echo "-----> Setting up Monit..."}
-      monit_config "monitrc", nil, "/etc/monit/"
-      monitored.each do |deamon|
-        invoke :"monit:#{deamon}"
+      monitored.each do |daemon|
+        invoke :"monit:#{daemon}"
       end
       invoke :'monit:syntax'
       invoke :'monit:restart'
@@ -42,12 +41,14 @@ namespace :monit do
   end
 end
 
-def monit_config(origin_name, destination_name = nil, path = nil)
+def monit_config(original_name, destination_name = nil)
   destination_name ||= origin_name
   path ||= monit_config_path
   destination = "#{path}/#{destination_name}"
-  template "monit/#{origin_name}.erb", "/tmp/monit_#{origin_name}"
-  queue "sudo mv /tmp/monit_#{origin_name} #{destination}"
-  queue "sudo chown root #{destination}"
-  queue "sudo chmod 600 #{destination}"
+  template "monit/#{original_name}.erb", "#{config_path}/monit/#{original_name}"
+  queue echo_cmd %{sudo ln -fs "#{config_path}/monit/#{original_name}" "#{destination}"}
+  queue check_symlink destination
+  # queue "sudo mv /tmp/monit_#{original_name} #{destination}"
+  # queue "sudo chown root #{destination}"
+  # queue "sudo chmod 600 #{destination}"
 end

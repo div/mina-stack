@@ -1,28 +1,26 @@
-# /etc/init/puma.conf - Puma config
+# /etc/init/sidekiq.conf - Sidekiq config
 
 # This example config should work with Ubuntu 12.04+.  It
-# allows you to manage multiple Puma instances with
+# allows you to manage multiple Sidekiq instances with
 # Upstart, Ubuntu's native service management tool.
 
-description "Puma Background Worker"
+description "Sidekiq Background Worker"
 
 # no "start on", we don't want to automatically start
+#stop on (stopping workers or runlevel [06])
 
-
-setuid <%= user %>
-setgid <%= user %>
+#setuid <%= user %>
+#setgid <%= user %>
 
 respawn
 respawn limit 3 30
 
 script
 # this script runs in /bin/sh by default
-# respawn as bash so we can source in rbenv/rvm
+# respawn as bash so we can source in rbenv
 exec /bin/bash <<'EOT'
   # set HOME to the setuid user's home, there doesn't seem to be a better, portable way
   export HOME="$(eval echo ~$(id -un))"
-
-  cd <%= "#{deploy_to!}/#{current_path!}" %>
 
   if [ -d "$HOME/.rbenv/bin" ]; then
     export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
@@ -40,7 +38,7 @@ exec /bin/bash <<'EOT'
     # if you aren't using auto, set your version here
     # chruby 2.0.0
   fi
-
-  <%= puma_cmd %> -C <%= puma_config %>
+  cd <%= "#{deploy_to!}/#{current_path!}" %>
+  <%= sidekiq_start %>
 EOT
 end script

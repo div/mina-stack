@@ -13,7 +13,7 @@ task :defaults do
 
   set_default :psql_user,             "#{app!}"
   set_default :psql_database,         "#{app_namespace}"
-  set_default :postgresql_pid,        "/var/run/postgresql/9.1-main.pid"
+  set_default :postgresql_pid,        "/var/run/postgresql/9.3-main.pid"
 
   set_default :memcached_pid,         "/var/run/memcached.pid"
 
@@ -42,6 +42,7 @@ task :defaults do
   set_default :unicorn_user,          user
   set_default :unicorn_group,         user
 
+  set_default :nginx_pid,             "/var/run/nginx.pid"
   set_default :nginx_config,          "#{nginx_path!}/sites-available/#{app_namespace!}.conf"
   set_default :nginx_config_e,        "#{nginx_path!}/sites-enabled/#{app_namespace!}.conf"
 
@@ -53,8 +54,10 @@ task :defaults do
   set_default :sidekiq_log,           "#{logs_path}/sidekiq.log"
   set_default :sidekiq_pid,           "#{pids_path}/sidekiq.pid"
   set_default :sidekiq_concurrency,   10
-  set_default :sidekiq_start,         "(cd #{deploy_to}/#{current_path}; nohup #{sidekiq_cmd} -e #{rails_env} -C #{sidekiq_config} -P #{sidekiq_pid} >> #{sidekiq_log} 2>&1 </dev/null &)"
-  set_default :sidekiq_stop,          "(cd #{deploy_to}/#{current_path} && #{sidekiqctl_cmd} stop #{sidekiq_pid} #{sidekiq_timeout})"
+  # set_default :sidekiq_start,         "(cd #{deploy_to}/#{current_path}; nohup #{sidekiq_cmd} -e #{rails_env} -C #{sidekiq_config} -P #{sidekiq_pid} >> #{sidekiq_log} 2>&1 </dev/null &)"
+  set_default :sidekiq_start,         "#{sidekiq_cmd} -e #{rails_env} -C #{sidekiq_config} -P #{sidekiq_pid} >> #{sidekiq_log}"
+  set_default :sidekiq_upstart,       "#{upstart_path!}/#{sidekiq_name}.conf"
+  # set_default :sidekiq_stop,          "(cd #{deploy_to}/#{current_path} && #{sidekiqctl_cmd} stop #{sidekiq_pid} #{sidekiq_timeout})"
 
   set_default :private_pub_name,      "private_pub_#{app_namespace}"
   set_default :private_pub_cmd,       lambda { "#{bundle_prefix} rackup private_pub.ru" }

@@ -12,11 +12,8 @@ namespace :nginx do
     queue "sudo apt-get -y install nginx"
   end
 
-  desc "Create configuration and other files"
-  task :setup => [:update]
-
   desc "Upload and update (link) all nginx config file"
-  task :update => [:upload, :link, :reload]
+  task :setup => [:upload, :link, :reload]
 
   desc "Symlink config file"
   task :link do
@@ -44,6 +41,7 @@ namespace :nginx do
   %w(stop start restart reload status).each do |action|
     desc "#{action.capitalize} Nginx"
     task action.to_sym do
+      invoke :sudo
       queue %{echo "-----> #{action.capitalize} Nginx"}
       queue echo_cmd "sudo service nginx #{action}"
     end
