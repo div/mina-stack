@@ -1,6 +1,6 @@
 check process <%= sidekiq_name %>
   with pidfile <%= sidekiq_pid %>
-  start program = "sudo service <%= sidekiq_name %> start" with timeout 90 seconds
-  stop program = "sudo service <%= sidekiq_name %> stop" with timeout 90 seconds
+  start program = "service <%= sidekiq_name %> start" with timeout 90 seconds
+  stop program = "service <%= sidekiq_name %> stop" with timeout 90 seconds
   if totalmem is greater than 200 MB for 2 cycles then restart # eating up memory?
   group sidekiq

@@ -9,8 +9,8 @@ description "Sidekiq Background Worker"
 # no "start on", we don't want to automatically start
 #stop on (stopping workers or runlevel [06])
 
-#setuid <%= user %>
-#setgid <%= user %>
+setuid <%= user %>
+setgid <%= user %>
 
 respawn
 respawn limit 3 30

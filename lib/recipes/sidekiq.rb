@@ -14,7 +14,7 @@ namespace :sidekiq do
     queue "sudo mv /tmp/sidekiq_conf #{sidekiq_upstart}"
   end
 
-  %w[quiet restart].each do |command|
+  %w[quiet].each do |command|
     desc "#{command.capitalize} sidekiq"
     task command do
       queue %{ if [ -f #{sidekiq_pid} ]; then
@@ -22,6 +22,12 @@ namespace :sidekiq do
         #{echo_cmd %{(cd #{deploy_to}/#{current_path} && #{sidekiqctl_cmd} #{command} #{sidekiq_pid})} }
         fi }
     end
+  end
+
+  desc "Restart Sidekiq"
+  task :restart do
+    stop
+    start
   end
 
   %w[start stop].each do |command|
