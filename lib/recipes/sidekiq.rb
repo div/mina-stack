@@ -26,8 +26,8 @@ namespace :sidekiq do
 
   desc "Restart Sidekiq"
   task :restart do
-    stop
-    start
+    invoke :'sidekiq:stop'
+    invoke :'sidekiq:start'
   end
 
   %w[start stop].each do |command|
