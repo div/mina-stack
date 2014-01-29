@@ -18,37 +18,26 @@ set :server_stack,                  %w(
                                       nginx
                                       postgresql
                                       redis
-                                      rbenv
-                                      puma
-                                      sidekiq
-                                      private_pub
                                       elastic_search
                                       imagemagick
                                       memcached
-                                      monit
+                                    )
+
+set :app_stack,                     %w(
+                                      puma
+                                      sidekiq
+                                      private_pub
+                                    )
+
+set :utils
+                                    %w(
+                                      rbenv
                                       node
                                       bower
                                     )
 
-set :shared_paths,                  %w(
-                                      tmp
-                                      log
-                                      config/puma.rb
-                                      config/database.yml
-                                      config/application.yml
-                                      config/sidekiq.yml
-                                      public/uploads
-                                    )
 
-set :monitored,                     %w(
-                                      nginx
-                                      postgresql
-                                      redis
-                                      puma
-                                      sidekiq
-                                      private_pub
-                                      memcached
-                                    )
+set :monitored, {server_stack + app_stack}
 
 task :environment do
   invoke :'rbenv:load'
@@ -58,8 +47,7 @@ desc "Deploys the current version to the server."
 task :deploy do
   deploy do
     invoke :'sidekiq:quiet'
-    invoke :'git:clone'
-    invoke :'deploy:link_shared_paths'
+    invoke :'git:update_code'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
     invoke :'bower:install_assets'
@@ -69,6 +57,10 @@ task :deploy do
       invoke :'puma:restart'
       invoke :'sidekiq:restart'
       invoke :'private_pub:restart'
+    end
+
+    to :clean do
+
     end
   end
 end

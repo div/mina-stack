@@ -10,9 +10,7 @@ namespace :postgresql do
     queue "sudo apt-get -y install postgresql libpq-dev"
   end
 
-  task(:setup) {  }
-
-  task :initial_setup => [:upload, :create_db]
+  task :setup => [:upload, :create_db]
 
   desc "Create configuration and other files"
   task :upload do
@@ -46,7 +44,7 @@ namespace :postgresql do
       queue "PGPASSWORD=$PASSWORD pg_dump -U $USERNAME $DATABASE -c -f dump.sql"
       queue "gzip -f dump.sql"
 
-      mina_cleanup!
+      # mina_cleanup!
     end
 
     %x[scp #{user}@#{domain}:#{deploy_to}/dump.sql.gz .]

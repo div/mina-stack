@@ -23,7 +23,6 @@ def check_response
   'then echo "----->   SUCCESS"; else echo "----->   FAILED"; fi'
 end
 
-
 task :sudo do
   set :sudo, true
   set :term_mode, :system # :pretty doesn't seem to work with sudo well

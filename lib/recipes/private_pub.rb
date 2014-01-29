@@ -13,18 +13,20 @@ namespace :private_pub do
 
   desc "Stop Private Pub"
   task :stop do
-    queue %[ if [ -f #{private_pub_pid} ]; then
+    queue %[
+      if [ -f #{private_pub_pid} ]; then
       echo "-----> Stop Private Pub"
       kill -s QUIT `cat #{private_pub_pid}` || true
-      fi ]
+      fi
+    ]
   end
 
   desc "Start Private Pub"
   task :start do
     queue %{
       echo "-----> Start Private Pub"
-      #{echo_cmd %[(cd #{deploy_to}/#{current_path}; #{private_pub_cmd} -s thin -E #{rails_env} -P #{private_pub_pid} >> #{private_pub_log} 2>&1 </dev/null &) ] }
-      }
+      #{echo_cmd %[(cd #{deploy_path}; #{private_pub_cmd} -s thin -E #{rails_env} -P #{private_pub_pid} >> #{private_pub_log} 2>&1 </dev/null &) ] }
+    }
   end
 
   desc "Restart Private Pub"

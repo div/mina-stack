@@ -48,7 +48,4 @@ def monit_config(original_name, destination_name = nil)
   template "monit/#{original_name}.erb", "#{config_path}/monit/#{original_name}"
   queue echo_cmd %{sudo ln -fs "#{config_path}/monit/#{original_name}" "#{destination}"}
   queue check_symlink destination
-  # queue "sudo mv /tmp/monit_#{original_name} #{destination}"
-  # queue "sudo chown root #{destination}"
-  # queue "sudo chmod 600 #{destination}"
 end
