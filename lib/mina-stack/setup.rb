@@ -8,7 +8,7 @@ end
 %w(install setup).each do |action|
   desc "#{action.capitalize} Server Stack Services"
   task action.to_sym do
-    %w(server_stack app_stack).each do |stack|
+    %w(server_stack utils app_stack).each do |stack|
       invoke :"#{stack}:#{action}"
     end
   end
@@ -26,6 +26,17 @@ namespace :app_stack do
     desc "#{action.capitalize} App Stack Services"
     task action.to_sym do
       app_stack.each do |service|
+        invoke :"#{service}:#{action}"
+      end
+    end
+  end
+end
+
+namespace :utils do
+  %w(install setup).each do |action|
+    desc "#{action.capitalize} Stack Utils"
+    task action.to_sym do
+      utils.each do |service|
         invoke :"#{service}:#{action}"
       end
     end
