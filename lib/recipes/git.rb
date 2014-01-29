@@ -5,19 +5,19 @@ namespace :git do
 
   # Each release is marked by a unique tag, generated with the current timestamp.  This should
   # not be changed, as the format is matched in the list of tags to find deploy tags.
-  set_default(:release_tag) { Time.now.utc.strftime("%Y%m%d%H%M%S") }
+  set_default :release_tag, lambda { Time.now.utc.strftime("%Y%m%d%H%M%S") }
 
   # If `release_tag` is changed, then `release_matcher` must be too, to a regular expression
   # that will match all generated release tags.  In general it's best to leave both unchanged.
-  set_default(:release_matcher) { /\A[0-9]{14}\Z/ }
+  set_default :release_matcher, lambda { /\A[0-9]{14}\Z/ }
 
   # On tagging a release, a message is also recorded alongside the tag.  This message can contain
   # anything useful - its contents are not important for the recipe.
-  set_default(:release_message, "Deployed at #{Time.now}")
+  set_default :release_message, lambda { "Deployed at #{Time.now}" }
 
   # Some tasks need to know the `latest_tag` - the most recent successful deployment.  If no
   # deployments have been made, this will be `nil`.
-  set_default(:latest_tag) { latest_tag_from_repository }
+  set_default :latest_tag, latest_tag_from_repository
 
   desc "Updates local repo from the Git repository."
   task :update_code do
