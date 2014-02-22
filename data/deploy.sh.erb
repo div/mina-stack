@@ -1,0 +1,63 @@
+<%
+  prepare = commands(:default).map { |s| "(\n\n#{indent 2, s}\n\n)" }.join(" && ")
+  launch  = commands(:launch).map  { |s| "(\n\n#{indent 2, s}\n\n)" }.join(" && ")
+  clean   = commands(:clean).map   { |s| "(\n\n#{indent 2, s}\n\n)" }.join(" && ")
+%>
+#!/usr/bin/env bash
+
+# Go to the deploy path
+cd "<%= deploy_to %>" || (
+  echo "! ERROR: not set up."
+  echo "The path '<%= deploy_to %>' is not accessible on the server."
+  echo "You may need to run 'mina ms:setup' first."
+  false
+) || exit 15
+
+# Check lockfile
+if [ -e "<%= lock_file %>" ]; then
+  echo "! ERROR: another deployment is ongoing."
+  echo "The file '<%= lock_file %>' was found."
+  echo "If no other deployment is ongoing, delete the file to continue."
+  exit 17
+fi
+
+# Bootstrap script (in deployer)
+(
+  echo "-----> Preparing deploy"
+  <%= echo_cmd %[touch "#{lock_file}"] %> &&
+
+  (
+<%= indent 4, (prepare.empty? ? "true" : prepare) %>
+  )
+) &&
+
+
+# ============================
+# === Start up serve => (in deployer)
+(
+  echo "-----> Launching"
+  <%= echo_cmd %[cd "$release_path"] %>
+<%= indent 2, (launch.empty? ? "true" : launch) %>
+) &&
+
+# ============================
+# === Complete & unlock
+(
+  rm -f "<%= lock_file %>"
+  echo "-----> Done. Deployed!"
+) ||
+
+# ============================
+# === Failed deployment
+(
+  echo "! ERROR: Deploy failed."
+
+<%= indent 2, clean %>
+
+  echo "-----> Cleaning up build"
+
+  # Unlock
+  <%= echo_cmd %[rm -f "#{lock_file}"] %>
+  echo "OK"
+  exit 19
+)

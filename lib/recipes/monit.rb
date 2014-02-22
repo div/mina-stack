@@ -12,6 +12,7 @@ namespace :monit do
     invoke :sudo
     if monitored.any?
       queue %{echo "-----> Setting up Monit..."}
+      invoke :'monit:create_config_dir'
       monitored.each do |daemon|
         invoke :"monit:#{daemon}"
       end
@@ -20,6 +21,11 @@ namespace :monit do
     else
       queue %{echo "-----> Skiping monit - nothing is set for monitoring..."}
     end
+  end
+
+  task :create_config_dir do
+    queue %{echo "-----> Monit config dir"}
+    queue "cd #{config_path} && mkdir -p monit"
   end
 
   task(:nginx) { monit_config "nginx" }

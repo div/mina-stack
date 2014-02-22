@@ -6,7 +6,7 @@ require 'mina-stack'
 
 set :app,                 'example'
 set :server_name,         'example.com'
-set :keep_releases,       9999
+# set :keep_releases,       9999
 set :default_server,      :production
 set :server, ENV['to'] || default_server
 invoke :"env:#{server}"
@@ -36,8 +36,6 @@ set :utils
                                       bower
                                     )
 
-
-set :monitored, {server_stack + app_stack}
 
 task :environment do
   invoke :'rbenv:load'

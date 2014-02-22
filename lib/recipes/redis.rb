@@ -16,7 +16,7 @@ namespace :redis do
     task command do
       invoke :sudo
       queue %{echo "-----> Trying to #{command} Redis..."}
-      queue "#{sudo} service redis #{command}"
+      queue "sudo service redis #{command}"
     end
   end
 
