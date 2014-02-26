@@ -10,9 +10,7 @@ namespace :postgresql do
     queue "sudo apt-get -y install postgresql libpq-dev"
   end
 
-  task(:setup) {  }
-
-  task :initial_setup => [:upload, :create_db]
+  task :setup => [:upload, :create_db]
 
   desc "Create configuration and other files"
   task :upload do
@@ -37,19 +35,21 @@ namespace :postgresql do
   };
   BASH
 
+  desc 'Pull remote db in development'
   task :pull do
-    isolate do
+    code = isolate do
+      invoke :environment
       queue RYAML
-      queue "USERNAME=$(ryaml ./shared/config/database.yml #{rails_env} username)"
-      queue "PASSWORD=$(ryaml ./shared/config/database.yml #{rails_env} password)"
-      queue "DATABASE=$(ryaml ./shared/config/database.yml #{rails_env} database)"
-      queue "PGPASSWORD=$PASSWORD pg_dump -U $USERNAME $DATABASE -c -f dump.sql"
-      queue "gzip -f dump.sql"
-
-      mina_cleanup!
+      queue "USERNAME=$(ryaml #{config_path!}/database.yml #{rails_env!} username)"
+      queue "PASSWORD=$(ryaml #{config_path!}/database.yml #{rails_env!} password)"
+      queue "DATABASE=$(ryaml #{config_path!}/database.yml #{rails_env!} database)"
+      queue %{echo "-----> Database $DATABASE will be dumped locally"}
+      queue "PGPASSWORD=$PASSWORD pg_dump -w -U $USERNAME $DATABASE -f #{tmp_path}/dump.sql"
+      queue "gzip -f #{tmp_path}/dump.sql"
+      run!
     end
 
-    %x[scp #{user}@#{domain}:#{deploy_to}/dump.sql.gz .]
+    %x[scp #{user}@#{domain}:#{tmp_path}/dump.sql.gz .]
     %x[gunzip -f dump.sql.gz]
     %x[#{RYAML} psql -d $(ryaml config/database.yml development database) -f dump.sql]
     %x[rm dump.sql]
