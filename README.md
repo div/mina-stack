@@ -63,6 +63,8 @@ to create folder structure and copy all configs
 4. Run
 ```
 bundle exec mina postgresql:create_db
+```
+to create db and set password
 
 5. Run
 ```
