@@ -1,14 +1,13 @@
 
-task :initial_setup => :environment do
-  invoke :create_extra_paths
-  invoke :create_config_files
-  invoke :setup
-  invoke :'postgresql:initial_setup'
-end
-
 %w(install setup).each do |action|
   desc "#{action.capitalize} Server Stack Services"
   task action.to_sym => :environment do
+    if action == :setup
+      invoke :create_extra_paths
+      invoke :create_config_files
+    else
+      invoke :'libs:install'
+    end
     server_stack.each do |service|
       invoke :"#{service}:#{action}"
     end
@@ -33,10 +32,15 @@ task :create_extra_paths do
   queue 'echo "-----> Create PID and Sockets paths"'
   queue echo_cmd "mkdir -p #{pids_path} && chown #{user}:#{group} #{pids_path} && chmod +rw #{pids_path}"
   queue echo_cmd "mkdir -p #{sockets_path} && chown #{user}:#{group} #{sockets_path} && chmod +rw #{sockets_path}"
+
+  unless monitored.empty?
+    queue 'echo "-----> Create Monit dir"'
+    queue echo_cmd "mkdir -p #{config_path}/monit && chown #{user}:#{group} #{config_path}/monit && chmod +rw #{config_path}/monit"
+  end
 end
 
 desc 'Create config files'
 task :create_config_files do
-  template "application.yml.erb"
-  queue  %[echo "-----> Be sure to edit 'shared/config/application.yml'."]
+  template "secrets.yml.erb"
+  queue  %[echo "-----> Be sure to edit 'shared/config/secrets.yml'."]
 end

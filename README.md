@@ -8,19 +8,14 @@ Sidekiq, Memcached, Imagemagick, ElasticSearch, Bower and Monit.
 
 ## Installation
 
-You will need mina installed, then
-just clone this repo in your lib directory as a submodule with
 ```
-git submodule add git://github.com/div/mina-stack.git lib/mina-stack
+gem 'mina-stack', github: 'div/mina-stack', group: :development
 ```
 
-and add
-
 ```
-require 'mina-stack/mina-stack'
+rails g mina:stack:install
 ```
-
-to deploy.rb
+to create default deploy.rb and servers/production.rb files
 
 ## Configuration
 
@@ -39,9 +34,37 @@ You can also set with services of your stack will be monitored by Monit - just u
 
 ## Deploy
 
-1. Create user on server and path to the app e.g. ~/apps/mycoolApp
-2. Add server settings to servers/production.rb and paths to shared_paths array
-3. run mina install - to install all the stack to the server
-4. run mina initial_setup to create folder structure
-5. run mina deploy
+1. Create user on server
 
+```
+sudo adduser deploy
+sudo adduser deploy sudo
+su deploy
+```
+
+then copy your ssh keys
+
+```
+ssh-copy-id deploy@IPADDRESS
+```
+
+2. Run
+```
+bundle exec mina install
+```
+to install all the stack to the server
+
+3. Run
+```
+bundle exec mina setup
+```
+to create folder structure and copy all configs
+
+4. Run
+```
+bundle exec mina postgresql:create_db
+
+5. Run
+```
+bundle exec mina deploy
+```

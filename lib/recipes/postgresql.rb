@@ -10,7 +10,7 @@ namespace :postgresql do
     queue "sudo apt-get -y install postgresql libpq-dev"
   end
 
-  task :setup => [:upload, :create_db]
+  task :setup => [:upload]
 
   desc "Create configuration and other files"
   task :upload do
