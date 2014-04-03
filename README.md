@@ -34,39 +34,29 @@ You can also set with services of your stack will be monitored by Monit - just u
 
 ## Deploy
 
-1. Create user on server
-
+Create user on server
 ```
 sudo adduser deploy
 sudo adduser deploy sudo
 su deploy
 ```
-
 then copy your ssh keys
-
 ```
 ssh-copy-id deploy@IPADDRESS
 ```
-
-2. Run
+Install all the stack to the server
 ```
-bundle exec mina install
+ bundle exec mina install
 ```
-to install all the stack to the server
-
-3. Run
+Create folder structure and copy all configs
 ```
 bundle exec mina setup
 ```
-to create folder structure and copy all configs
-
-4. Run
+Create db and set password
 ```
 bundle exec mina postgresql:create_db
 ```
-to create db and set password
-
-5. Run
+Deploy
 ```
 bundle exec mina deploy
 ```
