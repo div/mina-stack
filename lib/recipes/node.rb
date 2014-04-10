@@ -3,7 +3,7 @@ namespace :node do
   task :install do
     invoke :sudo
     queue "sudo apt-get -y update"
-    queue "sudo apt-get -y install software-properties-common python g++ make"
+    queue "sudo apt-get -y install software-properties-common python-software-properties python g++ make"
     queue "sudo add-apt-repository ppa:chris-lea/node.js --yes"
     queue "sudo apt-get -y update"
     queue "sudo apt-get -y install nodejs"
