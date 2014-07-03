@@ -34,8 +34,8 @@ namespace :sidekiq do
     desc "#{command.capitalize} sidekiq"
     task command do
       # need to get rid of sudo here: have to figure out how it works with upstart
-      invoke :sudo
       queue "sudo service #{sidekiq_name} #{command}"
+      queue  %[echo "-----> #{command.capitalize} sidekiq."]
     end
   end
 end
