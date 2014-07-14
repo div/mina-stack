@@ -36,6 +36,10 @@ task :create_extra_paths do
   if monitored.any?
     queue 'echo "-----> Create Monit dir"'
     queue echo_cmd "mkdir -p #{config_path}/monit && chown #{user}:#{group} #{config_path}/monit && chmod +rw #{config_path}/monit"
+    monitored.each do |p|
+      path = "#{config_path}/monit/#{p}"
+      queue echo_cmd "mkdir -p #{path} && chown #{user}:#{group} #{path} && chmod +rw #{path}"
+    end
   end
 end
 
