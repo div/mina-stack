@@ -2,9 +2,9 @@
 %w(install setup).each do |action|
   desc "#{action.capitalize} Server Stack Services"
   task action.to_sym => :environment do
-    if action == :setup
+    if action.to_sym == :setup
       invoke :create_extra_paths
-      invoke :create_config_files
+      # invoke :create_config_files
     else
       invoke :'libs:install'
     end
@@ -25,7 +25,7 @@ task :create_extra_paths do
   end
 
   shared_dirs = shared_paths.map { |file| File.dirname("#{deploy_to}/#{shared_path}/#{file}") }.uniq
-  cmds = shared_dirs.map do |dir|
+  shared_dirs.map do |dir|
     queue echo_cmd %{mkdir -p "#{dir}"}
   end
 
@@ -33,7 +33,7 @@ task :create_extra_paths do
   queue echo_cmd "mkdir -p #{pids_path} && chown #{user}:#{group} #{pids_path} && chmod +rw #{pids_path}"
   queue echo_cmd "mkdir -p #{sockets_path} && chown #{user}:#{group} #{sockets_path} && chmod +rw #{sockets_path}"
 
-  unless monitored.empty?
+  if monitored.any?
     queue 'echo "-----> Create Monit dir"'
     queue echo_cmd "mkdir -p #{config_path}/monit && chown #{user}:#{group} #{config_path}/monit && chmod +rw #{config_path}/monit"
   end
