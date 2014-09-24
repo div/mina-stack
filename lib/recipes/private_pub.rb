@@ -23,7 +23,7 @@ namespace :private_pub do
   task :start do
     queue %{
       echo "-----> Start Private Pub"
-      #{echo_cmd %[(cd #{deploy_to}/#{current_path}; #{private_pub_cmd} -s thin -E #{rails_env} -P #{private_pub_pid} >> #{private_pub_log} 2>&1 </dev/null &) ] }
+      #{echo_cmd %[(cd #{deploy_to}/#{current_path}; #{private_pub_cmd} -s #{private_pub_server} -E #{rails_env} -P #{private_pub_pid} >> #{private_pub_log} 2>&1 </dev/null &) ] }
       }
   end
 
