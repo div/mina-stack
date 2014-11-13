@@ -11,8 +11,6 @@ namespace :bower do
 
   desc "Install assets"
   task :install_assets do
-    queue %{echo "-----> Installing Assets with Bower..."}
-    queue "bower install"
     if ENV['force_bower']
       invoke :'bower:install_assets:force'
     else
