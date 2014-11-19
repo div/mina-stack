@@ -1,5 +1,5 @@
 task :defaults do
-  set_default :ruby_version,          "2.1.2"
+  set_default :ruby_version,          "2.1.4"
   set_default :services_path,         "/etc/init.d"
   set_default :upstart_path,          "/etc/init"
   set_default :tmp_path,              "#{deploy_to}/#{shared_path}/tmp"
@@ -14,7 +14,8 @@ task :defaults do
 
   set_default :psql_user,             "#{app!}"
   set_default :psql_database,         "#{app_namespace}"
-  set_default :postgresql_pid,        "/var/run/postgresql/9.3-main.pid"
+  set_default :postgresql_version,    "9.3"
+  set_default :postgresql_pid,        "/var/run/postgresql/#{postgresql_version}-main.pid"
 
   set_default :memcached_pid,         "/var/run/memcached.pid"
 

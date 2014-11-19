@@ -5,9 +5,8 @@ namespace :postgresql do
   desc "Install the latest stable release of PostgreSQL."
   task :install do
     invoke :sudo
-    queue "sudo add-apt-repository ppa:pitti/postgresql --yes"
     queue "sudo apt-get -y update"
-    queue "sudo apt-get -y install postgresql libpq-dev"
+    queue "sudo apt-get -y install postgresql postgresql-contrib"
   end
 
   task :setup => [:upload]
