@@ -11,7 +11,7 @@ state_path "<%= sockets_path %>/puma.state"
 stdout_redirect '<%= puma_log %>', '<%= puma_error_log %>', true
 
 workers <%= puma_workers %>
-preload_app!
+prune_bundler
 
 # 0-16 threads for production environment
 # threads 0, 16
