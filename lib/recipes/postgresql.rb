@@ -6,7 +6,7 @@ namespace :postgresql do
   task :install do
     invoke :sudo
     queue "sudo apt-get -y update"
-    queue "sudo apt-get -y install postgresql postgresql-contrib"
+    queue "sudo apt-get -y install postgresql postgresql-contrib libpq-dev"
   end
 
   task :setup => [:upload]
