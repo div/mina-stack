@@ -44,6 +44,7 @@ exec /bin/bash <<'EOT'
     # chruby 2.0.0
   fi
 
-  exec <%= puma_cmd %> -C <%= puma_config %>
+  cd <%= "#{deploy_to!}/#{current_path!}" %>
+  exec <%= puma_start %>
 EOT
 end script

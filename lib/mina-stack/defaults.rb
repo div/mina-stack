@@ -30,6 +30,7 @@ task :defaults do
   set_default :puma_state,            "#{sockets_path}/puma.state"
   set_default :puma_upstart,          "#{upstart_path!}/#{puma_name}.conf"
   set_default :puma_workers,          2
+  set_default :puma_start,            "#{puma_cmd} -C #{puma_config}"
 
   set_default :unicorn_name,          "unicorn_#{app_namespace!}"
   set_default :unicorn_socket,        "#{sockets_path}/unicorn.sock"
