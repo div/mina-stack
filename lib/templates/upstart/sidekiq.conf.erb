@@ -22,7 +22,7 @@
 description "Sidekiq Background Worker"
 
 start on runlevel [2345]
-stop on runlevel [016]
+stop on runlevel [06]
 
 setuid <%= user %>
 setgid <%= user %>
@@ -65,6 +65,6 @@ exec /bin/bash <<'EOT'
   # Logs out to /var/log/upstart/sidekiq.log by default
 
   cd <%= "#{deploy_to!}/#{current_path!}" %>
-  <%= sidekiq_start %>
+  exec <%= sidekiq_start %>
 EOT
 end script

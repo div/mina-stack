@@ -25,7 +25,7 @@ namespace :sidekiq do
   %w[start stop restart].each do |command|
     desc "#{command.capitalize} sidekiq"
     task command => :environment do
-      queue "service #{sidekiq_name} #{command}"
+      queue "sudo #{command} #{sidekiq_name}"
       queue  %[echo "-----> #{command.capitalize} sidekiq."]
     end
   end

@@ -4,10 +4,13 @@
 # allows you to manage multiple Puma instances with
 # Upstart, Ubuntu's native service management tool.
 
-description "Puma Background Worker"
+description "Puma Server"
 
-# no "start on", we don't want to automatically start
+start on runlevel [2345]
+stop on runlevel [06]
 
+reload signal USR1
+normal exit 0 TERM
 
 setuid <%= user %>
 setgid <%= user %>
@@ -41,6 +44,6 @@ exec /bin/bash <<'EOT'
     # chruby 2.0.0
   fi
 
-  <%= puma_cmd %> -C <%= puma_config %>
+  exec <%= puma_cmd %> -C <%= puma_config %>
 EOT
 end script
