@@ -55,7 +55,7 @@ task :defaults do
   set_default :sidekiq_config,        "#{config_path}/sidekiq.yml"
   set_default :sidekiq_log,           "#{logs_path}/sidekiq.log"
   set_default :sidekiq_pid,           "#{pids_path}/sidekiq.pid"
-  set_default :sidekiq_concurrency,   10
+  set_default :sidekiq_concurrency,   25
   set_default :sidekiq_start,         "#{sidekiq_cmd} -e #{rails_env} -C #{sidekiq_config}"
   set_default :sidekiq_upstart,       "#{upstart_path!}/#{sidekiq_name}.conf"
 

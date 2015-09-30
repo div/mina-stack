@@ -17,7 +17,7 @@ namespace :sidekiq do
 
   desc "Quiet sidekiq (stop accepting new work)"
   task :quiet => :environment do
-    queue "service #{sidekiq_name} reload"
+    queue "pgrep -f '#{sidekiq_name}' | xargs kill -USR1"
     queue  %[echo "-----> Quiet sidekiq (stop accepting new work)."]
   end
 
