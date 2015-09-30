@@ -3,17 +3,40 @@
 # This example config should work with Ubuntu 12.04+.  It
 # allows you to manage multiple Sidekiq instances with
 # Upstart, Ubuntu's native service management tool.
+#
+# See workers.conf for how to manage all Sidekiq instances at once.
+#
+# Save this config as /etc/init/sidekiq.conf then manage sidekiq with:
+#   sudo start sidekiq index=0
+#   sudo stop sidekiq index=0
+#   sudo status sidekiq index=0
+#
+# Hack Upstart's reload command to 'quiet' Sidekiq:
+#
+#   sudo reload sidekiq index=0
+#
+# or use the service command:
+#   sudo service sidekiq {start,stop,restart,status}
+#
 
 description "Sidekiq Background Worker"
 
-# no "start on", we don't want to automatically start
-#stop on (stopping workers or runlevel [06])
+start on runlevel [2345]
+stop on runlevel [016]
 
 setuid <%= user %>
 setgid <%= user %>
 
 respawn
 respawn limit 3 30
+
+# TERM is sent by sidekiqctl when stopping sidekiq. Without declaring these as
+# normal exit codes, it just respawns.
+normal exit 0 TERM
+
+# Older versions of Upstart might not support the reload command and need
+# this commented out.
+reload signal USR1
 
 script
 # this script runs in /bin/sh by default
@@ -38,6 +61,9 @@ exec /bin/bash <<'EOT'
     # if you aren't using auto, set your version here
     # chruby 2.0.0
   fi
+
+  # Logs out to /var/log/upstart/sidekiq.log by default
+
   cd <%= "#{deploy_to!}/#{current_path!}" %>
   <%= sidekiq_start %>
 EOT
