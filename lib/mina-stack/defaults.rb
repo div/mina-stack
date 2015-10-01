@@ -20,8 +20,8 @@ task :defaults do
   set_default :memcached_pid,         "/var/run/memcached.pid"
 
   set_default :puma_name,             "puma_#{app_namespace!}"
-  set_default :puma_cmd,              lambda { "#{bundle} exec puma" }
-  set_default :pumactl_cmd,           lambda { "#{bundle} exec pumactl" }
+  set_default :puma_cmd,              lambda { "#{bundle_bin} exec puma" }
+  set_default :pumactl_cmd,           lambda { "#{bundle_bin} exec pumactl" }
   set_default :puma_config,           "#{config_path}/puma.rb"
   set_default :puma_pid,              "#{pids_path}/puma.pid"
   set_default :puma_log,              "#{logs_path}/puma.log"
@@ -67,7 +67,7 @@ task :defaults do
   set_default :private_pub_log,       "#{logs_path}/private_pub.log"
 
   set_default :rpush_name,            "rpush_#{app_namespace!}"
-  set_default :rpush_cmd,             lambda { "#{bundle} exec rpush" }
+  set_default :rpush_cmd,             lambda { "#{bundle_bin} exec rpush" }
   set_default :rpush_upstart,         "#{upstart_path!}/#{rpush_name}.conf"
   set_default :rpush_start,           "#{rpush_cmd} start -f -e #{rails_env}"
 

@@ -44,6 +44,7 @@ exec /bin/bash <<'EOT'
 
   # Logs out to /var/log/upstart/<%= puma_name %>.log by default
 
+  cd <%= "#{deploy_to!}/#{current_path!}" %>
   exec <%= puma_start %>
 EOT
 end script
