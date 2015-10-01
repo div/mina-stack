@@ -25,8 +25,6 @@ exec /bin/bash <<'EOT'
   # set HOME to the setuid user's home, there doesn't seem to be a better, portable way
   export HOME="$(eval echo ~$(id -un))"
 
-  cd <%= "#{deploy_to!}/#{current_path!}" %>
-
   if [ -d "$HOME/.rbenv/bin" ]; then
     export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
   elif [ -f  /etc/profile.d/rvm.sh ]; then
@@ -44,7 +42,8 @@ exec /bin/bash <<'EOT'
     # chruby 2.0.0
   fi
 
-  cd <%= "#{deploy_to!}/#{current_path!}" %>
+  # Logs out to /var/log/upstart/<%= puma_name %>.log by default
+
   exec <%= puma_start %>
 EOT
 end script

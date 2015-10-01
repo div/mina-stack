@@ -69,7 +69,7 @@ task :defaults do
   set_default :rpush_name,            "rpush_#{app_namespace!}"
   set_default :rpush_cmd,             lambda { "#{bundle} exec rpush" }
   set_default :rpush_upstart,         "#{upstart_path!}/#{rpush_name}.conf"
-  set_default :rpush_start,           "#{rpush_cmd} start -e #{rails_env}"
+  set_default :rpush_start,           "#{rpush_cmd} start -f -e #{rails_env}"
 
   set_default :monit_config_path,     "/etc/monit/conf.d"
   set_default :monit_http_port,       2812

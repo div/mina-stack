@@ -9,8 +9,6 @@ setgid <%= user %>
 respawn
 respawn limit 3 30
 
-expect daemon
-
 script
 # this script runs in /bin/sh by default
 # respawn as bash so we can source in rbenv
@@ -35,9 +33,8 @@ exec /bin/bash <<'EOT'
     # chruby 2.0.0
   fi
 
-  # Logs out to /var/log/upstart/sidekiq.log by default
+  # Logs out to /var/log/upstart/<%= rpush_name %>.log by default
 
-  cd <%= "#{deploy_to!}/#{current_path!}" %>
   exec <%= rpush_start %>
 EOT
 end script
