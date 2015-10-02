@@ -17,15 +17,15 @@ namespace :puma do
   %w[start stop restart].each do |command|
     desc "#{command.capitalize} puma"
     task command do
-      queue "sudo #{command} #{puma_name}"
       queue  %[echo "-----> #{command.capitalize} puma."]
+      queue "sudo #{command} #{puma_name}"
     end
   end
 
   desc "Phased-restart puma"
   task :'phased-restart' do
-    queue "sudo reload #{puma_name}"
     queue  %[echo "-----> Phased-restart puma."]
+    queue "sudo reload #{puma_name}"
   end
 
 end

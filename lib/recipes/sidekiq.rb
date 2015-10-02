@@ -17,16 +17,16 @@ namespace :sidekiq do
 
   desc "Quiet sidekiq (stop accepting new work)"
   task :quiet => :environment do
-    queue "sudo reload #{sidekiq_name}"
     queue  %[echo "-----> Quiet sidekiq (stop accepting new work)."]
+    queue "sudo reload #{sidekiq_name}"
   end
 
 
   %w[start stop restart].each do |command|
     desc "#{command.capitalize} sidekiq"
     task command => :environment do
-      queue "sudo #{command} #{sidekiq_name}"
       queue  %[echo "-----> #{command.capitalize} sidekiq."]
+      queue "sudo #{command} #{sidekiq_name}"
     end
   end
 end
