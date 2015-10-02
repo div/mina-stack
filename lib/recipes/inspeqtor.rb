@@ -1,10 +1,10 @@
 namespace :inspeqtor do
 
-  task :install {}
+  task(:install) {}
 
-  task :setup {}
+  task(:setup) {}
 
-  %w[start_deploy finish_deploy status].each do |command|
+  [:"start deploy", :"finish deploy", :status].each do |command|
     desc "Inspeqtor #{command}"
     task command do
       queue "sudo inspeqtorctl #{command}"
