@@ -1,4 +1,5 @@
 require 'erb'
+require 'shellwords'
 
 def template(from, to=nil)
   queue %{echo "-----> Put #{from} file to #{to}"}
