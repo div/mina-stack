@@ -15,7 +15,7 @@ namespace :rails do
   desc 'Rails console'
   task :console do
     comment %{Loading rails console}
-    command %{#{fetch(:rails)} console RAILS_ENV=#{rails_env}}
+    queue %{ssh #{domain} -t "#{default_shell} -c 'cd #{current_path} && bundle exec rails c #{rails_env}'"}
   end
 end
 
