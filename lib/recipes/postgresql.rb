@@ -6,7 +6,10 @@ namespace :postgresql do
   task :install do
     invoke :sudo
     queue "sudo apt-get -y update"
-    queue "sudo apt-get -y install postgresql-#{postgresql_version} postgresql-contrib libpq-dev"
+    queue 'sudo add-apt-repository -y "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"'
+    queue 'wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -'
+    queue 'sudo apt-get -y update'
+    queue "sudo apt-get -y install postgresql-#{postgresql_version}"
   end
 
   task :setup => [:upload]
