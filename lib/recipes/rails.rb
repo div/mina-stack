@@ -11,6 +11,12 @@ namespace :rails do
     comment %{Loading Schema}
     command %{#{fetch(:rake)} db:schema:load}
   end
+  
+  desc 'Rails console'
+  task :console do
+    comment %{Loading rails console}
+    command %{#{fetch(:rails)} console RAILS_ENV=#{rails_env}}
+  end
 end
 
 
