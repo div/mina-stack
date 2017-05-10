@@ -1,12 +1,4 @@
 namespace :rails do
-
-  task(:install) {  }
-  task(:setup) {  }
-
-  
-end
-
-namespace :rails do
   
   task :log do
     queue 'echo "Contents of the log file are as follows:"'
