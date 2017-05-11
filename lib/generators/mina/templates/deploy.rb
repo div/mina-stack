@@ -6,8 +6,11 @@ require 'mina-stack'
 
 set :app,                 'example'
 set :server_name,         'example.com'
-set :keep_releases,       9999
+set :keep_releases,       7
 set :default_server,      :production
+set :cloudflare_ssl       true
+set :nginx_client_max_body_size '4M'
+
 set :server, ENV['to'] || default_server
 invoke :"env:#{server}"
 
@@ -21,13 +24,8 @@ set :server_stack,                  %w(
                                       rbenv
                                       puma
                                       sidekiq
-                                      private_pub
-                                      elastic_search
-                                      imagemagick
-                                      memcached
                                       monit
                                       node
-                                      bower
                                     )
 
 set :shared_paths,                  %w(
@@ -37,7 +35,6 @@ set :shared_paths,                  %w(
                                       config/database.yml
                                       config/application.yml
                                       config/sidekiq.yml
-                                      public/uploads
                                     )
 
 set :monitored,                     %w(
@@ -46,8 +43,6 @@ set :monitored,                     %w(
                                       redis
                                       puma
                                       sidekiq
-                                      private_pub
-                                      memcached
                                     )
 
 task :environment do
@@ -62,13 +57,11 @@ task :deploy do
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
-    invoke :'bower:install_assets'
     invoke :'rails:assets_precompile'
 
     to :launch do
       invoke :'puma:restart'
       invoke :'sidekiq:restart'
-      invoke :'private_pub:restart'
     end
   end
 end
