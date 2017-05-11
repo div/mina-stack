@@ -28,7 +28,7 @@ namespace :postgresql do
       psql_password.echo = "x"
       queue echo_cmd %{sudo -u postgres psql -c "create user #{psql_user} with password '#{psql_password}';"}
       queue echo_cmd %{sudo -u postgres psql -c "create database #{psql_database} owner #{psql_user} --template=template0 ENCODING 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8'";}
-      queue echo_cmd %{sudo -u postgres psql -c "update pg_database set encoding = pg_char_to_encoding('UTF8') where datname = 'kioskable_production';"}
+      queue echo_cmd %{sudo -u postgres psql -c "update pg_database set encoding = pg_char_to_encoding('UTF8') where datname = '#{psql_database}';"}
     end
   end
 
