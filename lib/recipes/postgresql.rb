@@ -10,6 +10,7 @@ namespace :postgresql do
     queue 'wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -'
     queue 'sudo apt-get -y update'
     queue "sudo apt-get -y install postgresql-#{postgresql_version}"
+    queue "sudo apt-get -y install libpq-dev"
   end
 
   task :setup => [:upload]
