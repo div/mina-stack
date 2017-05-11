@@ -34,12 +34,11 @@ namespace :postgresql do
     end
     pg_ram = nil
     pg_connections = 100
-    ask "How many GB do you want to provision to the PostgreSQL database?" do |psql_ram|
-      pg_ram = psql_ram.to_i
-    end
-    ask "And max connections to the PostgreSQL database?" do |psql_max|
-      pg_connections = psql_max.to_i
-    end
+    pg_ram = ask "How many GB do you want to provision to the PostgreSQL database?"
+    pg_connections = ask "And max connections to the PostgreSQL database?"
+    pg_ram = pg_ram.to_i
+    pg_connections = pg_connections.to_i
+    
     queue %{echo "-----> Tuning database"}
     conf = Pgcalc.new(pg_ram, pg_connections).to_s.split("\n").join('\n')
     queue %{sudo sh -c "echo '#{conf}' >> /etc/postgresql/9.6/main/postgresql.conf"}
