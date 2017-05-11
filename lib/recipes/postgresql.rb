@@ -31,8 +31,18 @@ namespace :postgresql do
       queue echo_cmd %{sudo -u postgres psql -c "create database #{psql_database} owner #{psql_user} --template=template0 ENCODING 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8'";}
       queue echo_cmd %{sudo -u postgres psql -c "update pg_database set encoding = pg_char_to_encoding('UTF8') where datname = '#{psql_database}';"}
       template "database.yml.erb"
-
     end
+    pg_ram = nil
+    pg_connections = 100
+    ask "How many GB do you want to provision to the PostgreSQL database?" do |psql_ram|
+      pg_ram = psql_ram.to_i
+    end
+    ask "And max connections to the PostgreSQL database?" do |psql_max|
+      pg_connections = psql_max.to_i
+    end
+    queue %{echo "-----> Tuning database"}
+    conf = Pgcalc.new(pg_ram, pg_connections).to_s.split("\n").join('\n')
+    queue %{sudo sh -c "echo '#{conf}' >> /etc/postgresql/9.6/main/postgresql.conf"}
   end
 
   RYAML = <<-BASH
