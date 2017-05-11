@@ -43,6 +43,8 @@ namespace :postgresql do
     queue %{echo "-----> Tuning database"}
     conf = Pgcalc.new(pg_ram, pg_connections).to_s.split("\n").join('\n')
     queue %{sudo sh -c "echo '#{conf}' >> /etc/postgresql/9.6/main/postgresql.conf"}
+    queue %{echo "-----> Tuned. Restarting postgresql service."}
+    queue echo_cmd %{sudo service postgresql restart}
   end
 
   RYAML = <<-BASH
