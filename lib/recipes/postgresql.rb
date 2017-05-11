@@ -35,8 +35,8 @@ namespace :postgresql do
     pg_ram = nil
     pg_connections = 100
     pg_ram = ask "How many GB do you want to provision to the PostgreSQL database?"
-    pg_connections = ask "And max connections to the PostgreSQL database?"
     pg_ram = pg_ram.to_i
+    pg_connections = ask "And max connections to the PostgreSQL database?"
     pg_connections = pg_connections.to_i
     
     queue %{echo "-----> Tuning database"}
