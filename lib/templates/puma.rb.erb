@@ -14,4 +14,12 @@ workers <%= puma_workers %>
 prune_bundler
 
 # 0-16 threads for production environment
-# threads 0, 16
+threads <%= puma_threads %>, <%= puma_threads %>
+
+preload_app!
+
+on_worker_boot do
+  ActiveSupport.on_load(:active_record) do
+    ActiveRecord::Base.establish_connection
+  end
+end
