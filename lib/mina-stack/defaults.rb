@@ -87,10 +87,6 @@ task :defaults do
                                       config/sidekiq.yml
                                     )
 
-  set :shared_dirs,                 %w(
-                                      tmp
-                                      log
-                                      )
   set :monitored,             %w(
                                         nginx
                                         postgresql
