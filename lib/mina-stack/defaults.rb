@@ -81,10 +81,10 @@ task :defaults do
   set :monit_http_password,   "PleaseChangeMe"
 
   set :shared_files,                  %w(
-                                      puma.rb
-                                      database.yml
-                                      application.yml
-                                      sidekiq.yml
+                                      config/puma.rb
+                                      config/database.yml
+                                      config/application.yml
+                                      config/sidekiq.yml
                                     )
 
   set :shared_dirs,                 %w(
