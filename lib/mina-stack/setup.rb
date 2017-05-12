@@ -9,7 +9,7 @@
       invoke :'libs:install'
     end
     fetch(:server_stack, []).each do |service|
-      invoke service.to_sym, action
+      invoke :"#{service.to_sym}:#{action}"
     end
   end
 end

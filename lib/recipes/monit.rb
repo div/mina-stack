@@ -1,18 +1,18 @@
 namespace :monit do
 
   desc "Install Monit"
-  task :install do
+  task :install => :environment do
     invoke :sudo
     comment "Installing Monit..."
     command "sudo apt-get -y install monit"
   end
 
   desc "Setup all Monit configuration"
-  task :setup do
+  task :setup => :environment do
     invoke :sudo
-    if monitored.any?
+    if fetch(:monitored, []).any?
       comment "Setting up Monit..."
-      monitored.each do |daemon|
+      fetch(:monitored).each do |daemon|
         invoke :monit, daemon
       end
       invoke :monit, :syntax

@@ -1,9 +1,9 @@
 namespace :es do
 
   desc "Install the latest release of ElasticSearch"
-  task :install do
+  task :install => :environment do
     invoke :sudo
-   command %{echo "-----> Installing ElasticSearch..."}
+    command %{echo "-----> Installing ElasticSearch..."}
     command "sudo apt-get install openjdk-7-jre -y"
     command "wget https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.1.tar.gz -O elasticsearch.tar.gz"
     command "tar -xf elasticsearch.tar.gz"
@@ -18,11 +18,11 @@ namespace :es do
     command "sudo ln -s `readlink -f /usr/local/share/elasticsearch/bin/service/elasticsearch` /usr/local/bin/rcelasticsearch"
   end
 
-  task(:setup) {  }
+  task(:setup => :environment) {  }
 
   %w[start stop restart].each do |cmd|
     desc "#{cmd} elasticsearch"
-    task cmd do
+    task cmd.to_sym => :environment do
       invoke :sudo
       command "sudo service elasticsearch #{cmd}"
     end

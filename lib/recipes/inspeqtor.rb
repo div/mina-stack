@@ -6,7 +6,7 @@ namespace :inspeqtor do
 
   [:"start deploy", :"finish deploy", :status].each do |cmd|
     desc "Inspeqtor #{cmd}"
-    task cmd do
+    task cmd => :environment do
       comment "Inspeqtor #{cmd}."
       command "inspeqtorctl #{cmd}"
     end

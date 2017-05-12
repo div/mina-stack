@@ -1,12 +1,12 @@
 namespace :imagemagick do
 
   desc "Install the latest release of Imagemagick"
-  task :install do
+  task :install => :environment do
     invoke :sudo
     comment "Installing the latest release of ImageMagick"
     command "sudo apt-get install imagemagick libmagickwand-dev -y"
   end
 
-  task(:setup) {  }
+  task(:setup => :environment) {  }
 
 end
