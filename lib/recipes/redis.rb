@@ -16,7 +16,7 @@ namespace :redis do
     task cmd do
       invoke :sudo
       comment "#{cmd} Redis..."
-      command "#{sudo} service redis #{cmd}"
+      command "sudo service redis #{cmd}"
     end
   end
 

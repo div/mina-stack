@@ -15,7 +15,7 @@ namespace :rpush do
   %w[start stop restart reload].each do |cmd|
     desc "#{cmd.capitalize} rpush"
     task cmd do
-      comment "#{command.capitalize} rpush."
+      comment "#{cmd.capitalize} rpush."
       command "sudo #{cmd} #{fetch(:rpush_name)}"
     end
   end

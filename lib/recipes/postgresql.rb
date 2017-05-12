@@ -25,26 +25,26 @@ namespace :postgresql do
   task :create_db do
     comment "Create database."
     invoke :sudo
-    ask "PostgreSQL password:" do |psql_password|
-      psql_password.echo = "x"
-      command echo_cmd %{sudo -u postgres psql -c "create user #{fetch(:psql_user)} with password '#{fetch(:psql_password)}';"}
-      command echo_cmd %{sudo -u postgres psql -c "create database #{fetch(:psql_database)} owner #{fetch(:psql_user)} --template=template0 ENCODING 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8'";}
-      command echo_cmd %{sudo -u postgres psql -c "update pg_database set encoding = pg_char_to_encoding('UTF8') where datname = '#{fetch(:psql_database)}';"}
-      command echo_cmd %{sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE #{fetch(:psql_database)} TO #{fetch(:psql_user)};"}
-      template "database.yml.erb"
-    end
+    psql_password = ask "PostgreSQL password:"
+    set :psql_password, psql_password.strip
+    command echo_cmd %{sudo -u postgres psql -c "create user #{fetch(:psql_user)} with password '#{fetch(:psql_password)}';"}
+    command echo_cmd %{sudo -u postgres psql -c "create database #{fetch(:psql_database)} owner #{fetch(:psql_user)} --template=template0 ENCODING 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8'";}
+    command echo_cmd %{sudo -u postgres psql -c "update pg_database set encoding = pg_char_to_encoding('UTF8') where datname = '#{fetch(:psql_database)}';"}
+    command echo_cmd %{sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE #{fetch(:psql_database)} TO #{fetch(:psql_user)};"}
+    template "database.yml.erb"
     tune = ask "Do you want to tune your database? [Y/n]"
-    return if tune == 'n'
-    pg_ram = ask "How many GB do you want to provision to the PostgreSQL database?"
-    pg_ram = pg_ram.to_i
-    pg_connections = ask "And max connections to the PostgreSQL database?"
-    pg_connections = pg_connections.to_i
-    
-    comment "Tuning database."
-    conf = Pgcalc.new(pg_ram, pg_connections).to_s.split("\n").join('\n')
-    command %{sudo sh -c "echo '#{conf}' >> /etc/postgresql/#{fetch(:postgresql_version)}/main/postgresql.conf"}
-    command "Tuned. Restarting postgresql service."
-    command echo_cmd %{sudo service postgresql restart}
+    unless tune == 'n'
+      pg_ram = ask "How many GB do you want to provision to the PostgreSQL database?"
+      pg_ram = pg_ram.to_i
+      pg_connections = ask "And max connections to the PostgreSQL database?"
+      pg_connections = pg_connections.to_i
+
+      comment "Tuning database."
+      conf = Pgcalc.new(pg_ram, pg_connections).to_s.split("\n").join('\n')
+      command %{sudo sh -c "echo '#{conf}' >> /etc/postgresql/#{fetch(:postgresql_version)}/main/postgresql.conf"}
+      command "Tuned. Restarting postgresql service."
+      command echo_cmd %{sudo service postgresql restart}
+    end
   end
 
   RYAML = <<-BASH

@@ -17,7 +17,7 @@ namespace :puma do
   %w[start stop restart].each do |cmd|
     desc "#{cmd.capitalize} puma"
     task cmd do
-      comment "#{command.capitalize} puma."
+      comment "#{cmd.capitalize} puma."
       command "sudo #{cmd} #{fetch(:puma_name)}"
     end
   end

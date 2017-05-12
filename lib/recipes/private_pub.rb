@@ -29,7 +29,7 @@ namespace :private_pub do
 
   desc "Restart Private Pub"
   task :restart do
-    invoke :private_pub, :stop
-    invoke :private_pub, :start
+    invoke :'private_pub:stop'
+    invoke :'private_pub:start'
   end
 end

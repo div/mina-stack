@@ -1,7 +1,7 @@
 namespace :monit do
 
   desc "Install Monit"
-  task :install => :environment do
+  task :install do
     invoke :sudo
     comment "Installing Monit..."
     command "sudo apt-get -y install monit"
@@ -13,10 +13,10 @@ namespace :monit do
     if fetch(:monitored, []).any?
       comment "Setting up Monit..."
       fetch(:monitored).each do |daemon|
-        invoke :monit, daemon
+        invoke :"monit:#{daemon}"
       end
-      invoke :monit, :syntax
-      invoke :monit, :restart
+      invoke :"monit:syntax"
+      invoke :"monit:restart"
     else
       comment "Skipping monit - nothing is set for monitoring..."
     end
@@ -42,9 +42,9 @@ namespace :monit do
 end
 
 def monit_config(original_name, destination_name = nil)
-  destination_name ||= origin_name
+  destination_name ||= original_name
   path ||= fetch(:monit_config_path)
-  destination = "#{path}/#{destination_name}"
+  destination = "#{path}/#{destination_name}.txt"
   template "monit/#{original_name}.erb", "#{fetch(:config_path)}/monit/#{original_name}"
   command echo_cmd %{sudo ln -fs "#{fetch(:config_path)}/monit/#{original_name}" "#{destination}"}
   command check_symlink destination

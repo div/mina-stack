@@ -3,6 +3,8 @@ namespace :rbenv do
   desc "Install rbenv, Ruby, and the Bundler gem"
   task :install do
     invoke :sudo
+    comment "Checking to see if #{fetch(:ruby_version)} exists on server..."
+    #  if(echo $(rbenv versions) | grep -q "2.3.1") then echo "i am here"; else echo "nope"; fi
     comment "Installing Ruby"
     command "sudo apt-get -y install curl git-core"
     command "curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash"
