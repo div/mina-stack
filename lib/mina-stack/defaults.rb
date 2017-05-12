@@ -32,8 +32,8 @@ task :defaults do
   set_default :unicorn_workers,       1
   set_default :unicorn_bin,           lambda { "#{fetch(:bundle_bin)} exec unicorn" }
   set_default :unicorn_cmd,           "cd #{fetch(:deploy_to)}/#{fetch(:current_path)} && #{fetch(:unicorn_bin)} -D -c #{fetch(:unicorn_config)} -E #{fetch(:rails_env)}"
-  set_default :unicorn_user,          user
-  set_default :unicorn_group,         user
+  set_default :unicorn_user,          fetch(:user)
+  set_default :unicorn_group,         fetch(:user)
 
   set_default :nginx_pid,             "/var/run/nginx.pid"
   set_default :nginx_config,          "#{fetch(:nginx_path!)}/sites-available/#{fetch(:app_namespace!)}.conf"

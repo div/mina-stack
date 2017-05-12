@@ -3,13 +3,13 @@ require 'shellwords'
 
 def template(from, to=nil)
   comment "Putting #{from} file to #{to}"
-  to ||= "#{config_path}/#{from.chomp(".erb")}"
+  to ||= "#{fetch(:config_path)}/#{from.chomp(".erb")}"
   erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))
   put ERB.new(erb).result(binding), to
 end
 
 def put(content, file)
-  queue %[echo #{escape content} > "#{file}"]
+  command %[echo #{escape content} > "#{file}"]
 end
 
 def escape(str)

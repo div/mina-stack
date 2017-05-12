@@ -11,8 +11,8 @@ set :default_server,      :production
 set :cloudflare_ssl,       true
 set :nginx_client_max_body_size, '4M'
 
-set :server, ENV['on'] || default_server
-invoke :"env:#{server}"
+set :server, ENV['on'] || fetch(:default_server)
+invoke :env, fetch(:server)
 
 # Allow calling as `mina deploy at=master`
 set :branch, ENV['at']  if ENV['at']
@@ -46,22 +46,22 @@ set :monitored,                     %w(
                                     )
 
 task :environment do
-  invoke :'rbenv:load'
+  invoke :rbenv, :load
 end
 
 desc "Deploys the current version to the server."
 task :deploy do
   deploy do
-    invoke :'sidekiq:quiet'
-    invoke :'git:clone'
-    invoke :'deploy:link_shared_paths'
-    invoke :'bundle:install'
-    invoke :'rails:db_migrate'
-    invoke :'rails:assets_precompile'
+    invoke :sidekiq, :quiet
+    invoke :git, :clone
+    invoke :deploy, :link_shared_paths
+    invoke :bundle, :install
+    invoke :rails, :db_migrate
+    invoke :rails, :assets_precompile
 
     to :launch do
-      invoke :'puma:restart'
-      invoke :'sidekiq:restart'
+      invoke :puma, :restart
+      invoke :sidekiq, :restart
     end
   end
 end
