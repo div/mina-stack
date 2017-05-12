@@ -20,8 +20,8 @@ task :create_extra_paths do
   command echo_cmd "mkdir -p #{fetch(:config_path)}"
 
   comment "Create shared paths"
-  fetch(:shared_paths).each do |p|
-    command echo_cmd "mkdir -p #{fetch(:shared_path)}/#{p}" unless p.include?(".")
+  fetch(:shared_dirs, []).each do |p|
+    command echo_cmd "mkdir -p #{fetch(:shared_paths)}/#{p}" unless p.include?(".")
   end
 
   shared_dirs = fetch(:shared_paths).map { |file| File.dirname("#{fetch(:shared_path)}/#{file}") }.uniq
@@ -46,5 +46,5 @@ end
 desc 'Create config files'
 task :create_config_files do
   template "secrets.yml.erb"
-  command  %[echo "-----> Be sure to edit 'shared/config/secrets.yml'."]
+  comment "echo Be sure to edit 'shared/config/secrets.yml'"
 end

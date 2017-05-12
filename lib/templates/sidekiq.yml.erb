@@ -1,6 +1,6 @@
 :verbose: false
 :namespace: sidekiq
-:concurrency:  <%= fetch(:sidekiq_concurrency) %>
+:concurrency: <%= fetch(:sidekiq_concurrency) %>
 :queues:
   - [high, 7]
   - [low, 5]

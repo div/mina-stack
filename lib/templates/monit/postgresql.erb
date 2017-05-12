@@ -1,4 +1,4 @@
-check process postgresql with pidfile <%= fetch(:postgresql_pid!) %>
+check process postgresql with pidfile <%= fetch(:postgresql_pid) %>
   start program = "/etc/init.d/postgresql start"
   stop program = "/etc/init.d/postgresql stop"
   if failed host localhost port 5432 protocol pgsql then restart

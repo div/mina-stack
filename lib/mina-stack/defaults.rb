@@ -6,7 +6,7 @@ task :defaults do
   set :sockets_path,          "#{fetch(:tmp_path)}/sockets"
   set :pids_path,             "#{fetch(:tmp_path)}/pids"
   set :logs_path,             "#{fetch(:shared_path)}/log"
-  set :config_path,           "#{fetch(:shared_path)}/config"
+  set :config_path,           "#{fetch(:current_path)}/config"
   set :app_namespace,         "#{fetch(:app)}_#{fetch(:rails_env)}"
   set :bundle,                "cd #{fetch(:current_path)} && #{fetch(:bundle_bin)}"
 
@@ -61,17 +61,35 @@ task :defaults do
   set :rpush_upstart,         "#{fetch(:upstart_path)}/#{fetch(:rpush_name)}.conf"
   set :rpush_start,           "#{fetch(:rpush_cmd)} start -f -e #{fetch(:rails_env)}"
 
+  set :puma_name,             "puma_#{fetch(:app_namespace)}"
+  set :puma_cmd,              lambda { "#{fetch(:bundle_bin)} exec puma" }
+  set :pumactl_cmd,           lambda { "#{fetch(:bundle_bin)} exec pumactl" }
+  set :puma_config,           "#{fetch(:current_path)}/puma.rb"
+  set :puma_pid,              "#{fetch(:pids_path)}/puma.pid"
+  set :puma_log,              "#{fetch(:logs_path)}/puma.log"
+  set :puma_error_log,        "#{fetch(:logs_path)}/puma.err.log"
+  set :puma_socket,           "#{fetch(:sockets_path)}/puma.sock"
+  set :puma_state,            "#{fetch(:sockets_path)}/puma.state"
+  set :puma_upstart,          "#{fetch(:upstart_path)}/#{fetch(:puma_name)}.conf"
+  set :puma_workers,          2
+  set :puma_start,            "#{fetch(:puma_cmd)} -C #{fetch(:puma_config)}"
+
   set :monit_config_path,     "/etc/monit/conf.d"
   set :monit_http_port,       2812
   set :monit_http_username,   "PleaseChangeMe_monit"
   set :monit_http_password,   "PleaseChangeMe"
 
-  set :shared_paths,          %w(
-                                        tmp
-                                        log
-                                        public/uploads
-                                      )
+  set :shared_files,                  %w(
+                                      /home/deploy/apps/kioskable/current/config/puma.rb
+                                      config/database.yml
+                                      config/application.yml
+                                      config/sidekiq.yml
+                                    )
 
+  set :shared_dirs,                 %w(
+                                      tmp
+                                      log
+                                      )
   set :monitored,             %w(
                                         nginx
                                         postgresql

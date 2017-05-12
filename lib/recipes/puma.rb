@@ -9,7 +9,7 @@ namespace :puma do
   task :upload do
     invoke :sudo
     template "puma.rb.erb", fetch(:puma_config)
-    comment %[Be sure to edit #{fetch(:puma_config)}."]
+    comment "Be sure to edit #{fetch(:puma_config)}."
     template "upstart/puma.conf.erb", "/tmp/puma_conf"
     command "sudo mv /tmp/puma_conf #{fetch(:puma_upstart)}"
   end

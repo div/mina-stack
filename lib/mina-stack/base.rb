@@ -2,7 +2,7 @@ require 'erb'
 require 'shellwords'
 
 def template(from, to=nil)
-  comment "Putting #{from} file to #{to}"
+  comment "Dropping #{from} file to #{to}"
   to ||= "#{fetch(:config_path)}/#{from.chomp(".erb")}"
   erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))
   put ERB.new(erb).result(binding), to
@@ -23,7 +23,6 @@ end
 def check_response
   'then echo "----->   SUCCESS"; else echo "----->   FAILED"; fi'
 end
-
 
 task :sudo do
   set :sudo, true
