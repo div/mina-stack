@@ -6,7 +6,7 @@ task :defaults do
   set :sockets_path,          "#{fetch(:tmp_path)}/sockets"
   set :pids_path,             "#{fetch(:tmp_path)}/pids"
   set :logs_path,             "#{fetch(:shared_path)}/log"
-  set :config_path,           "#{fetch(:current_path)}/config"
+  set :config_path,           "#{fetch(:shared_path)}/config"
   set :app_namespace,         "#{fetch(:app)}_#{fetch(:rails_env)}"
   set :bundle,                "cd #{fetch(:current_path)} && #{fetch(:bundle_bin)}"
 
@@ -35,6 +35,7 @@ task :defaults do
   set :unicorn_user,          fetch(:user)
   set :unicorn_group,         fetch(:user)
 
+  set :nginx_path,            '/etc/nginx'
   set :nginx_pid,             "/var/run/nginx.pid"
   set :nginx_config,          "#{fetch(:nginx_path)}/sites-available/#{fetch(:app_namespace)}.conf"
   set :nginx_config_e,        "#{fetch(:nginx_path)}/sites-enabled/#{fetch(:app_namespace)}.conf"
@@ -64,7 +65,7 @@ task :defaults do
   set :puma_name,             "puma_#{fetch(:app_namespace)}"
   set :puma_cmd,              lambda { "#{fetch(:bundle_bin)} exec puma" }
   set :pumactl_cmd,           lambda { "#{fetch(:bundle_bin)} exec pumactl" }
-  set :puma_config,           "#{fetch(:current_path)}/puma.rb"
+  set :puma_config,           "#{fetch(:config_path)}/puma.rb"
   set :puma_pid,              "#{fetch(:pids_path)}/puma.pid"
   set :puma_log,              "#{fetch(:logs_path)}/puma.log"
   set :puma_error_log,        "#{fetch(:logs_path)}/puma.err.log"
@@ -80,10 +81,10 @@ task :defaults do
   set :monit_http_password,   "PleaseChangeMe"
 
   set :shared_files,                  %w(
-                                      /home/deploy/apps/kioskable/current/config/puma.rb
-                                      config/database.yml
-                                      config/application.yml
-                                      config/sidekiq.yml
+                                      puma.rb
+                                      database.yml
+                                      application.yml
+                                      sidekiq.yml
                                     )
 
   set :shared_dirs,                 %w(

@@ -25,6 +25,7 @@ task :create_extra_paths do
   end
 
   shared_dirs = fetch(:shared_dirs).map { |file| File.dirname("#{fetch(:shared_path)}/#{file}") }.uniq
+  puts shared_dirs
   shared_dirs.map do |dir|
     command echo_cmd %{mkdir -p "#{dir}"}
   end

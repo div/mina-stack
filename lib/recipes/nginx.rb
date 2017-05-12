@@ -13,7 +13,11 @@ namespace :nginx do
   end
 
   desc "Upload and update (link) all nginx config file"
-  task :setup => [:upload, :link, :reload]
+  task :setup => :environment do
+    invoke :'nginx:upload'
+    invoke :'nginx:link'
+    invoke :'nginx:reload'
+  end
 
   desc "Symlink config file"
   task :link do
@@ -21,7 +25,7 @@ namespace :nginx do
     comment "Symlink nginx config file"
     command echo_cmd %{sudo ln -fs "#{fetch(:config_path)}/nginx.conf" "#{fetch(:nginx_config)}"}
     command check_symlink fetch(:nginx_config)
-    command echo_cmd %{sudo ln -fs "#{fetch(:config_path_e)}/nginx.conf" "#{fetch(:nginx_config_e)}"}
+    command echo_cmd %{sudo ln -fs "#{fetch(:config_path)}/nginx.conf" "#{fetch(:nginx_config_e)}"}
     command check_symlink fetch(:nginx_config_e)
   end
 

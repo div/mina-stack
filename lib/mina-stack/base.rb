@@ -28,3 +28,22 @@ task :sudo do
   set :sudo, true
   set :term_mode, :system # :pretty doesn't seem to work with sudo well
 end
+
+
+
+namespace :deploy do
+  task :lsp do
+    comment %{Symlinking shared paths}
+
+    fetch(:shared_dirs, []).each do |linked_dir|
+      command %{mkdir -p #{File.dirname("./#{linked_dir}")}}
+      command %{rm -rf "./#{linked_dir}"}
+      command %{ln -s "#{fetch(:shared_path)}/#{linked_dir}" "./#{linked_dir}"}
+    end
+
+    fetch(:shared_files, []).each do |linked_path|
+      command %{rm -f "#{fetch(:current_path)}/#{linked_path}"}
+      command %{ln -s "#{fetch(:shared_path)}/#{linked_path}" "#{fetch(:current_path)}/#{linked_path}"}
+    end
+  end
+end
