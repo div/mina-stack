@@ -8,7 +8,7 @@ server {
   server_name <%= fetch(:server_name) %>;
   keepalive_timeout 5;
 
-  root <%= fetch(:deploy_to) %>/<%= fetch(:current_path) %>/public;
+  root <%= fetch(:current_path) %>/public;
 
   client_max_body_size <%= fetch(:nginx_client_max_body_size) %>;
 

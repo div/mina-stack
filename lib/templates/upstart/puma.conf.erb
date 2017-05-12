@@ -42,9 +42,9 @@ exec /bin/bash <<'EOT'
     # chruby 2.0.0
   fi
 
-  # Logs out to /var/log/upstart/<%= puma_name %>.log by default
+  # Logs out to /var/log/upstart/<%= fetch(:puma_name) %>.log by default
 
-  cd <%= "#{fetch(:deploy_to!)}/#{fetch(:current_path!)}" %>
+  cd <%= "#{fetch(:current_path)}" %>
   exec <%= fetch(:puma_start) %>
 EOT
 end script

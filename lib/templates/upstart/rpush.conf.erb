@@ -35,7 +35,7 @@ exec /bin/bash <<'EOT'
 
   # Logs out to /var/log/upstart/<%= fetch(:rpush_name) %>.log by default
 
-  cd <%= "#{fetch(:deploy_to!)}/#{fetch(:current_path!)}" %>
+  cd <%= "#{fetch(:current_path)}" %>
   exec <%= fetch(:rpush_start) %>
 EOT
 end script

@@ -23,7 +23,7 @@ namespace :private_pub do
   task :start do
     command %{
       echo "-----> Start Private Pub"
-      #{echo_cmd %[(cd #{fetch(:deploy_to)}/#{fetch(:current_path)}; #{fetch(:private_pub_cmd)} -s #{fetch(:private_pub_server)} -E #{fetch(:rails_env)} -P #{fetch(:private_pub_pid)} >> #{fetch(:private_pub_log)} 2>&1 </dev/null &) ] }
+      #{echo_cmd %[(cd #{fetch(:current_path)}; #{fetch(:private_pub_cmd)} -s #{fetch(:private_pub_server)} -E #{fetch(:rails_env)} -P #{fetch(:private_pub_pid)} >> #{fetch(:private_pub_log)} 2>&1 </dev/null &) ] }
       }
   end
 

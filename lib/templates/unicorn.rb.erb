@@ -1,4 +1,4 @@
-rails_root = "<%= "#{fetch(:deploy_to!)}/#{fetch(:current_path!)}" %>"
+rails_root = "<%= "#{fetch(:current_path)}" %>"
 rails_env  = "<%= fetch(:rails_env) %>"
 pid_file   = "<%= fetch(:unicorn_pid) %>"
 socket_file= "<%= fetch(:unicorn_socket) %>"

@@ -5,7 +5,7 @@ activate_control_app "unix://<%= fetch(:sockets_path) %>/pumactl.sock"
 # not deamonizing here - still can use -d flag
 # daemonize true
 environment "<%= fetch(:rails_env) %>"
-directory '<%= "#{fetch(:deploy_to!)}/#{fetch(current_path!)}" %>'
+directory '<%= "#{fetch(:current_path)}" %>'
 pidfile "<%= fetch(:puma_pid) %>"
 state_path "<%= fetch(:sockets_path) %>/puma.state"
 stdout_redirect '<%= fetch(:puma_log) %>', '<%= fetch(:puma_error_log) %>', true

@@ -2,17 +2,17 @@ task :defaults do
   set :ruby_version,          "2.3.1"
   set :services_path,         "/etc/init.d"
   set :upstart_path,          "/etc/init"
-  set :tmp_path,              "#{fetch(:deploy_to)}/#{fetch(:shared_path)}/tmp"
+  set :tmp_path,              "#{fetch(:shared_path)}/tmp"
   set :sockets_path,          "#{fetch(:tmp_path)}/sockets"
   set :pids_path,             "#{fetch(:tmp_path)}/pids"
-  set :logs_path,             "#{fetch(:deploy_to)}/#{fetch(:shared_path)}/log"
-  set :config_path,           "#{fetch(:deploy_to)}/#{fetch(:shared_path)}/config"
-  set :app_namespace,         "#{fetch(:app!)}_#{fetch(:rails_env!)}"
-  set :bundle,                "cd #{fetch(:deploy_to)}/#{fetch(:current_path)} && #{fetch(:bundle_bin)}"
+  set :logs_path,             "#{fetch(:shared_path)}/log"
+  set :config_path,           "#{fetch(:shared_path)}/config"
+  set :app_namespace,         "#{fetch(:app)}_#{fetch(:rails_env)}"
+  set :bundle,                "cd #{fetch(:current_path)} && #{fetch(:bundle_bin)}"
 
   set :term_mode,             :pretty
 
-  set :psql_user,             "#{fetch(:app!)}"
+  set :psql_user,             "#{fetch(:app)}"
   set :psql_database,         "#{fetch(:app_namespace)}"
   set :postgresql_version,    "9.6"
   set :postgresql_pid,        "/var/run/postgresql/#{fetch(:postgresql_version)}-main.pid"
@@ -31,15 +31,15 @@ task :defaults do
   set :unicorn_script,        "#{fetch(:services_path!)}/#{fetch(:unicorn_name)}"
   set :unicorn_workers,       1
   set :unicorn_bin,           lambda { "#{fetch(:bundle_bin)} exec unicorn" }
-  set :unicorn_cmd,           "cd #{fetch(:deploy_to)}/#{fetch(:current_path)} && #{fetch(:unicorn_bin)} -D -c #{fetch(:unicorn_config)} -E #{fetch(:rails_env)}"
+  set :unicorn_cmd,           "cd #{fetch(:current_path)} && #{fetch(:unicorn_bin)} -D -c #{fetch(:unicorn_config)} -E #{fetch(:rails_env)}"
   set :unicorn_user,          fetch(:user)
   set :unicorn_group,         fetch(:user)
 
   set :nginx_pid,             "/var/run/nginx.pid"
-  set :nginx_config,          "#{fetch(:nginx_path!)}/sites-available/#{fetch(:app_namespace!)}.conf"
-  set :nginx_config_e,        "#{fetch(:nginx_path!)}/sites-enabled/#{fetch(:app_namespace!)}.conf"
+  set :nginx_config,          "#{fetch(:nginx_path)}/sites-available/#{fetch(:app_namespace)}.conf"
+  set :nginx_config_e,        "#{fetch(:nginx_path)}/sites-enabled/#{fetch(:app_namespace)}.conf"
 
-  set :sidekiq_name,          "sidekiq_#{fetch(:app_namespace!)}"
+  set :sidekiq_name,          "sidekiq_#{fetch(:app_namespace)}"
   set :sidekiq_cmd,           lambda { "#{fetch(:bundle_bin)} exec sidekiq" }
   set :sidekiqctl_cmd,        lambda { "#{fetch(:bundle_prefix)} sidekiqctl" }
   set :sidekiq_timeout,       10
@@ -48,7 +48,7 @@ task :defaults do
   set :sidekiq_pid,           "#{fetch(:pids_path)}/sidekiq.pid"
   set :sidekiq_concurrency,   25
   set :sidekiq_start,         "#{fetch(:sidekiq_cmd)} -e #{fetch(:rails_env)} -C #{fetch(:sidekiq_config)}"
-  set :sidekiq_upstart,       "#{fetch(:upstart_path!)}/#{fetch(:sidekiq_name)}.conf"
+  set :sidekiq_upstart,       "#{fetch(:upstart_path)}/#{fetch(:sidekiq_name)}.conf"
 
   set :private_pub_name,      "private_pub_#{fetch(:app_namespace)}"
   set :private_pub_cmd,       lambda { "#{fetch(:bundle_prefix)} rackup private_pub.ru" }
@@ -58,7 +58,7 @@ task :defaults do
 
   set :rpush_name,            "rpush_#{fetch(:app_namespace!)}"
   set :rpush_cmd,             lambda { "#{fetch(:bundle_bin)} exec rpush" }
-  set :rpush_upstart,         "#{fetch(:upstart_path!)}/#{fetch(:rpush_name)}.conf"
+  set :rpush_upstart,         "#{fetch(:upstart_path)}/#{fetch(:rpush_name)}.conf"
   set :rpush_start,           "#{fetch(:rpush_cmd)} start -f -e #{fetch(:rails_env)}"
 
   set :monit_config_path,     "/etc/monit/conf.d"
