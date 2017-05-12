@@ -45,14 +45,7 @@ def monit_config(original_name, destination_name = nil)
   destination_name ||= original_name
   path ||= fetch(:monit_config_path)
   destination = "#{path}/#{destination_name}"
-  puts "dest..."
-  puts destination
-                                              # file name in /home/deploy/apps/app/shared/config/monit
   template "monit/#{original_name}.erb", "#{fetch(:config_path)}/monit/#{original_name}.monitrc"
-  puts destination
   command echo_cmd %{sudo ln -s "#{fetch(:config_path)}/monit/#{original_name}.monitrc" "#{destination}.monitrc"}
   command check_symlink destination
-  # queue "sudo mv /tmp/monit_#{original_name} #{destination}"
-  # queue "sudo chown root #{destination}"
-  # queue "sudo chmod 600 #{destination}"
 end
