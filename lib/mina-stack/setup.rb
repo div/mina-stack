@@ -6,9 +6,9 @@
       invoke :create_extra_paths
       # invoke :create_config_files
     else
-      invoke :libs, 'install'
+      invoke :'libs:install'
     end
-    server_stack.each do |service|
+    fetch(:server_stack, []).each do |service|
       invoke service.to_sym, action
     end
   end
@@ -16,27 +16,27 @@ end
 
 desc 'Create extra paths for shared configs, pids, sockets, etc.'
 task :create_extra_paths do
-  command 'echo "-----> Create configs path"'
+  comment 'Create configs path'
   command echo_cmd "mkdir -p #{fetch(:config_path)}"
 
-  command 'echo "-----> Create shared paths"'
-  shared_paths.each do |p|
+  comment "Create shared paths"
+  fetch(:shared_paths).each do |p|
     command echo_cmd "mkdir -p #{fetch(:deploy_to)}/#{fetch(:shared_path)}/#{p}" unless p.include?(".")
   end
 
-  shared_dirs = shared_paths.map { |file| File.dirname("#{fetch(:deploy_to)}/#{fetch(:shared_path)}/#{file}") }.uniq
+  shared_dirs = fetch(:shared_paths).map { |file| File.dirname("#{fetch(:deploy_to)}/#{fetch(:shared_path)}/#{file}") }.uniq
   shared_dirs.map do |dir|
     command echo_cmd %{mkdir -p "#{dir}"}
   end
 
-  command 'echo "-----> Create PID and Sockets paths"'
+  comment 'Create PID and Sockets paths'
   command echo_cmd "mkdir -p #{fetch(:pids_path)} && chown #{fetch(:user)}:#{fetch(:group)} #{fetch(:pids_path)} && chmod +rw #{fetch(:pids_path)}"
   command echo_cmd "mkdir -p #{fetch(:sockets_path)} && chown #{fetch(:user)}:#{fetch(:group)} #{fetch(:sockets_path)} && chmod +rw #{fetch(:sockets_path)}"
 
-  if monitored.any?
-    command 'echo "-----> Create Monit dir"'
+  if fetch(:monitored, []).any?
+    comment 'Create Monit dir'
     command echo_cmd "mkdir -p #{fetch(:config_path)}/monit && chown #{fetch(:user)}:#{fetch(:group)} #{fetch(:config_path)}/monit && chmod +rw #{fetch(:config_path)}/monit"
-    monitored.each do |p|
+    fetch(:monitored, []).each do |p|
       path = "#{fetch(:config_path)}/monit/#{p}"
       command echo_cmd "mkdir -p #{fetch(:path)} && chown #{fetch(:user)}:#{fetch(:group)} #{fetch(:path)} && chmod +rw #{path}"
     end
