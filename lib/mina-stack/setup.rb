@@ -6,10 +6,10 @@
       invoke :create_extra_paths
       # invoke :create_config_files
     else
-      invoke :libs, 'install'.to_sym
+      invoke :libs, 'install'
     end
     server_stack.each do |service|
-      invoke service.to_sym, action.to_sym
+      invoke service.to_sym, action
     end
   end
 end
