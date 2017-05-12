@@ -2,7 +2,7 @@ require 'erb'
 require 'shellwords'
 
 def template(from, to=nil)
-  queue %{echo "-----> Putting #{from} file to #{to}"}
+  comment "Putting #{from} file to #{to}"
   to ||= "#{config_path}/#{from.chomp(".erb")}"
   erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))
   put ERB.new(erb).result(binding), to

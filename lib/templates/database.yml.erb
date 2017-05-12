@@ -1,8 +1,8 @@
-<%= rails_env %>:
+<%= fetch(:rails_env) %>:
   adapter: postgresql
-  database: <%= psql_database %>
-  username: <%= psql_user %>
-  password: <%= psql_password %>
+  database: <%= fetch(:psql_database) %>
+  username: <%= fetch(:psql_user) %>
+  password: <%= fetch(:psql_password) %>
   host: localhost
   encoding: utf8
-  pool: <%= psql_pool %>
+  pool: <%= fetch(:psql_pool) %>

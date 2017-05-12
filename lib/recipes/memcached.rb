@@ -2,7 +2,7 @@ namespace :memcached do
   desc "Install Memcached"
   task :install do
     invoke :sudo
-    queue "sudo apt-get -y install memcached"
+    command "sudo apt-get -y install memcached"
   end
 
   desc "Setup Memcached"
@@ -12,10 +12,10 @@ namespace :memcached do
     # restart
   end
 
-  %w[start stop restart].each do |command|
-    desc "#{command} Memcached"
-    task command do
-      queue "sudo service memcached #{command}"
+  %w[start stop restart].each do |cmd|
+    desc "#{cmd} Memcached"
+    task cmd do
+      command "sudo service memcached #{cmd}"
     end
   end
 end

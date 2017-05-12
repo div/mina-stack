@@ -9,14 +9,14 @@ namespace :rpush do
   task :upload do
     invoke :sudo
     template "upstart/rpush.conf.erb", "/tmp/rpush_conf"
-    queue "sudo mv /tmp/rpush_conf #{rpush_upstart}"
+    command "sudo mv /tmp/rpush_conf #{fetch(:rpush_upstart)}"
   end
 
-  %w[start stop restart reload].each do |command|
-    desc "#{command.capitalize} rpush"
-    task command do
-      queue "sudo #{command} #{rpush_name}"
-      queue  %[echo "-----> #{command.capitalize} rpush."]
+  %w[start stop restart reload].each do |cmd|
+    desc "#{cmd.capitalize} rpush"
+    task cmd do
+      comment "#{command.capitalize} rpush."
+      command "sudo #{cmd} #{fetch(:rpush_name)}"
     end
   end
 end

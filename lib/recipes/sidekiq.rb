@@ -8,25 +8,25 @@ namespace :sidekiq do
   desc "Create configuration and other files"
   task :upload do
     invoke :sudo
-    template "sidekiq.yml.erb", sidekiq_config
-    queue  %[echo "-----> Be sure to edit #{sidekiq_config}."]
+    template "sidekiq.yml.erb", fetch(:sidekiq_config)
+    comment "Be sure to edit #{fetch(:sidekiq_config)}"
     template "upstart/sidekiq.conf.erb", "/tmp/sidekiq_conf"
-    queue "sudo mv /tmp/sidekiq_conf #{sidekiq_upstart}"
+    command "sudo mv /tmp/sidekiq_conf #{fetch(:sidekiq_upstart)}"
   end
 
 
   desc "Quiet sidekiq (stop accepting new work)"
   task :quiet => :environment do
-    queue  %[echo "-----> Quiet sidekiq (stop accepting new work)."]
-    queue "sudo reload #{sidekiq_name}"
+    comment "Quiet Sidekiq... (stop accepting new work"
+    command "sudo reload #{fetch(:sidekiq_name)}"
   end
 
 
-  %w[start stop restart].each do |command|
-    desc "#{command.capitalize} sidekiq"
-    task command => :environment do
-      queue  %[echo "-----> #{command.capitalize} sidekiq."]
-      queue "sudo #{command} #{sidekiq_name}"
+  %w[start stop restart].each do |cmd|
+    desc "#{cmd.capitalize} sidekiq"
+    task cmd => :environment do
+      comment "#{cmd.capitalize} Sidekiq..."
+      command "sudo #{cmd} #{fetch(:sidekiq_name)}"
     end
   end
 end

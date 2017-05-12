@@ -4,11 +4,11 @@ namespace :inspeqtor do
 
   task(:setup) {}
 
-  [:"start deploy", :"finish deploy", :status].each do |command|
-    desc "Inspeqtor #{command}"
-    task command do
-      queue  %[echo "-----> Inspeqtor #{command}."]
-      queue "inspeqtorctl #{command}"
+  [:"start deploy", :"finish deploy", :status].each do |cmd|
+    desc "Inspeqtor #{cmd}"
+    task cmd do
+      comment "Inspeqtor #{cmd}."
+      command "inspeqtorctl #{cmd}"
     end
   end
 end

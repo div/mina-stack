@@ -1,16 +1,16 @@
-<% rails_socket = server_stack.include?("puma") ? puma_socket : unicorn_socket %>
+<% rails_socket = fetch(:server_stack).include?("puma") ? fetch(:puma_socket) : fetch(:unicorn_socket) %>
 upstream <%= app %> {
   server unix://<%= rails_socket %> fail_timeout=0;
 }
 
 server {
   # listen 80 default deferred;
-  server_name <%= server_name %>;
+  server_name <%= fetch(:server_name) %>;
   keepalive_timeout 5;
 
-  root <%= deploy_to %>/<%= current_path %>/public;
+  root <%= fetch(:deploy_to) %>/<%= fetch(:current_path) %>/public;
 
-  client_max_body_size <%= nginx_client_max_body_size %>;
+  client_max_body_size <%= fetch(:nginx_client_max_body_size) %>;
 
   if (-f $document_root/system/maintenance.html) {
     return 503;
@@ -42,7 +42,7 @@ server {
     proxy_set_header Host $http_host;
     proxy_redirect off;
     proxy_pass http://<%= app %>;
-   <% if cloudflare_ssl %>
+   <% if fetch(:cloudflare_ssl) %>
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "upgrade";

@@ -8,10 +8,10 @@ set :app,                 'example'
 set :server_name,         'example.com'
 set :keep_releases,       7
 set :default_server,      :production
-set :cloudflare_ssl       true
-set :nginx_client_max_body_size '4M'
+set :cloudflare_ssl,       true
+set :nginx_client_max_body_size, '4M'
 
-set :server, ENV['to'] || default_server
+set :server, ENV['on'] || default_server
 invoke :"env:#{server}"
 
 # Allow calling as `mina deploy at=master`

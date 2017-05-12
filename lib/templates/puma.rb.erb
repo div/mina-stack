@@ -1,20 +1,20 @@
 # Bind to a UNIX socket
-bind "unix://<%= puma_socket %>"
-activate_control_app "unix://<%= sockets_path %>/pumactl.sock"
+bind "unix://<%= fetch(:puma_socket) %>"
+activate_control_app "unix://<%= fetch(:sockets_path) %>/pumactl.sock"
 
 # not deamonizing here - still can use -d flag
 # daemonize true
-environment "<%= rails_env %>"
-directory '<%= "#{deploy_to!}/#{current_path!}" %>'
-pidfile "<%= puma_pid %>"
-state_path "<%= sockets_path %>/puma.state"
-stdout_redirect '<%= puma_log %>', '<%= puma_error_log %>', true
+environment "<%= fetch(:rails_env) %>"
+directory '<%= "#{fetch(:deploy_to!)}/#{fetch(current_path!)}" %>'
+pidfile "<%= fetch(:puma_pid) %>"
+state_path "<%= fetch(:sockets_path) %>/puma.state"
+stdout_redirect '<%= fetch(:puma_log) %>', '<%= fetch(:puma_error_log) %>', true
 
-workers <%= puma_workers %>
+workers <%= fetch(:puma_workers) %>
 prune_bundler
 
 # 0-16 threads for production environment
-threads <%= puma_threads %>, <%= puma_threads %>
+threads <%= fetch(:puma_threads) %>, <%= fetch(:puma_threads) %>
 
 preload_app!
 
