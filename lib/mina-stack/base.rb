@@ -29,8 +29,6 @@ task :sudo do
   set :term_mode, :system # :pretty doesn't seem to work with sudo well
 end
 
-
-
 namespace :deploy do
   task :lsp do
     comment %{Symlinking shared paths}

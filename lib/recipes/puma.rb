@@ -14,18 +14,15 @@ namespace :puma do
     command "sudo mv /tmp/puma_conf #{fetch(:puma_upstart)}"
   end
 
-  %w[start stop restart].each do |cmd|
+  %w[start stop restart phased_restart phased-restart reload].each do |cmd|
     desc "#{cmd.capitalize} puma"
     task cmd do
+      if cmd == 'phased_restart' || cmd == 'phased-restart'
+        cmd = 'reload'
+      end
       comment "#{cmd.capitalize} puma."
       command "sudo #{cmd} #{fetch(:puma_name)}"
     end
-  end
-
-  desc "Phased-restart puma"
-  task :'phased-restart' do
-    command "Phased-restart puma."
-    command "sudo reload #{fetch(:puma_name)}"
   end
 
 end
