@@ -3,10 +3,36 @@ upstream <%=fetch(:app)%> {
   server unix://<%= rails_socket %> fail_timeout=0;
 }
 
+<% if fetch(:lets_encrypt) %>
+
 server {
+    listen 80;
+    server_name my.kioskable.com;
+    return 301 https://$host$request_uri;
+}
+
+<% end %>
+
+server {
+  server_name <%=fetch(:server_name)%>;
+
+  <% if fetch(:lets_encrypt) %>
+  listen 443 ssl;
+  ssl_certificate /etc/letsencrypt/live/<%=fetch(:server_name)%>/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/<%=fetch(:server_name)%>/privkey.pem;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_prefer_server_ciphers on;
+  ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES1$
+  ssl_session_timeout 1d;
+  ssl_session_cache shared:SSL:50m;
+  ssl_stapling on;
+  ssl_stapling_verify on;
+  add_header Strict-Transport-Security max-age=15768000;
+  <% else %>
   listen      [::]:80;
   listen      80;
-  server_name <%=fetch(:server_name)%>;
+  <% end %>
+
   client_max_body_size 4M;
 
   location    / {

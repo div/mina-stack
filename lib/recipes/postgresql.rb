@@ -92,22 +92,18 @@ namespace :postgresql do
 
   desc 'Pull remote db in development'
   task :pull do
-    code = isolate do
-      invoke :environment
-      command RYAML
-      command "USERNAME=$(ryaml #{fetch(:config_path!)}/database.yml #{fetch(:rails_env!)} username)"
-      command "PASSWORD=$(ryaml #{fetch(:config_path!)}/database.yml #{fetch(:rails_env!)} password)"
-      command "DATABASE=$(ryaml #{fetch(:config_path!)}/database.yml #{fetch(:rails_env!)} database)"
-      comment "Database $DATABASE will be dumped locally"
-      command "PGPASSWORD=$PASSWORD pg_dump -w -U $USERNAME $DATABASE -f #{fetch(:tmp_path)}/dump.sql"
-      command "gzip -f #{fetch(:tmp_path)}/dump.sql"
-      run!
-    end
+    invoke :environment
+    command "USERNAME=#{fetch(:psql_user)}"
+    command "PASSWORD=$(ruby -e \"f=File.read '#{fetch(:config_path)}/database.yml';puts f.scan %r{password: (\\w*)}\")"
+    command "DATABASE=#{fetch(:app)}_#{fetch(:rails_env)}"
+    comment "Database $DATABASE will be dumped locally"
+    command "pg_dump -Fc --dbname=postgresql://$USERNAME:$PASSWORD@127.0.0.1/$DATABASE #{fetch(:tmp_path)}/dump.sql"
+    command "gzip -f #{fetch(:tmp_path)}/dump.sql"
 
     %x[scp #{fetch(:user)}@#{fetch(:domain)}:#{fetch(:tmp_path)}/dump.sql.gz .]
     %x[gunzip -f dump.sql.gz]
-    %x[#{RYAML} psql -d $(ryaml config/database.yml development database) -f dump.sql]
-    %x[rm dump.sql]
+
+    `pg_restore -j 4 --verbose --clean --no-acl --no-owner -h localhost -d kioskable_development dump.sql`
   end
 
 end

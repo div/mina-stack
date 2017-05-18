@@ -5,6 +5,7 @@ require 'mina/rbenv'
 require 'mina-stack'
 
 set :app,                 'example'
+set :port,                22
 set :server_name,         'example.com'
 set :keep_releases,       7
 set :default_server,      :production
@@ -44,6 +45,8 @@ set :monitored,                     %w(
                                       puma
                                       sidekiq
                                     )
+
+set :allowed_ports, %w(443 80 22)
 
 task :environment do
   invoke :rbenv, :load

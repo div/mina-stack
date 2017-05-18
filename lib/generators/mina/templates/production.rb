@@ -1,6 +1,7 @@
 namespace :env do
   task :production => [:environment] do
     set :domain,              '127.0.0.1'
+    set :port,                '22'
     set :user,                'deployer'
     set :deploy_to,           "/home/#{fetch(:user)}/apps/#{fetch(:app)}"
     set :repository,          "/home/#{fetch(:user)}/git/#{fetch(:app)}"
