@@ -3,7 +3,7 @@ namespace :rails do
   desc 'Log'
   task :log do
     command 'echo "Contents of the log file are as follows:"'
-    command "tail -f #{logs_path}/#{rails_env}.log"
+    command "tail -f #{fetch(:logs_path)}/#{fetch(:rails_env)}.log"
   end
   
 end
