@@ -14,15 +14,23 @@ namespace :puma do
     command "sudo mv /tmp/puma_conf #{fetch(:puma_upstart)}"
   end
 
-  %w[start stop restart phased_restart phased-restart reload].each do |cmd|
+  %w[start stop restart reload].each do |cmd|
     desc "#{cmd.capitalize} puma"
     task cmd do
-      if cmd == 'phased_restart' || cmd == 'phased-restart'
-        cmd = 'reload'
-      end
       comment "#{cmd.capitalize} puma."
       command "sudo #{cmd} #{fetch(:puma_name)}"
     end
+
+    task phased_restart: :environment do
+      command %[
+      if [ -e '#{fetch(:pumactl_socket)}' ]; then
+        cd #{fetch(:current_path)} && #{fetch(:pumactl_cmd)} -S #{fetch(:puma_state)} --pidfile #{fetch(:puma_pid)} phased-restart
+      else
+        echo 'Puma is not running!';
+      fi
+    ]
+    end
+
   end
 
 end
