@@ -1,5 +1,10 @@
 namespace :nginx do
 
+  desc "Check syntax"
+  task :check do
+    command echo_cmd "sudo nginx -t"
+  end
+
   desc "Install latest stable release of nginx"
   task :install do
     invoke :sudo
