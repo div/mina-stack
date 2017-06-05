@@ -7,7 +7,7 @@ upstream <%=fetch(:app)%> {
 
 server {
     listen 80;
-    server_name my.kioskable.com;
+    server_name <%=fetch(:server_name)%>;
     return 301 https://$host$request_uri;
 }
 
@@ -33,7 +33,7 @@ server {
   listen      80;
   <% end %>
 
-  client_max_body_size 4M;
+  client_max_body_size <%=fetch(:nginx_client_max_body_size, '4M')%>;
 
   location    / {
 
