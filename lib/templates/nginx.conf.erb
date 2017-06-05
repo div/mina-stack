@@ -17,6 +17,11 @@ server {
   server_name <%=fetch(:server_name)%>;
 
   <% if fetch(:lets_encrypt) %>
+
+  location ~ /.well-known {
+    allow all;
+  }
+
   listen 443 ssl;
   ssl_certificate /etc/letsencrypt/live/<%=fetch(:server_name)%>/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/<%=fetch(:server_name)%>/privkey.pem;
