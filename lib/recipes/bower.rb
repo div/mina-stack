@@ -1,18 +1,18 @@
 namespace :bower do
 
   desc "Install bower with dependencies"
-  task :install do
+  task :install => :environment do
     invoke :sudo
-    queue %{echo "-----> Installing Bower..."}
-    queue "sudo npm install -g bower"
+    comment "Installing Bower..."
+    command "sudo npm install -g bower"
   end
 
-  task(:setup) {  }
+  task(:setup => :environment) {  }
 
   desc "Install assets"
-  task :install_assets do
-    queue %{echo "-----> Installing Assets with Bower..."}
-    queue "bower install"
+  task :install_assets => :environment do
+    comment "Installing assets with Bower..."
+    command "bower install"
   end
 
 end

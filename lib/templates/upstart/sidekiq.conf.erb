@@ -24,8 +24,8 @@ description "Sidekiq Background Worker"
 start on runlevel [2345]
 stop on runlevel [06]
 
-setuid <%= user %>
-setgid <%= user %>
+setuid <%= fetch(:user) %>
+setgid <%= fetch(:user) %>
 
 respawn
 respawn limit 3 30
@@ -62,9 +62,9 @@ exec /bin/bash <<'EOT'
     # chruby 2.0.0
   fi
 
-  # Logs out to /var/log/upstart/<%= sidekiq_name %>.log by default
+  # Logs out to /var/log/upstart/<%= fetch(:sidekiq_name) %>.log by default
 
-  cd <%= "#{deploy_to!}/#{current_path!}" %>
-  exec <%= sidekiq_start %>
+  cd <%= "#{fetch(:current_path)}" %>
+  exec <%= fetch(:sidekiq_start) %>
 EOT
 end script

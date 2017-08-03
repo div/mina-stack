@@ -8,37 +8,37 @@
     else
       invoke :'libs:install'
     end
-    server_stack.each do |service|
-      invoke :"#{service}:#{action}"
+    fetch(:server_stack, []).each do |service|
+      invoke :"#{service.to_sym}:#{action}"
     end
   end
 end
 
 desc 'Create extra paths for shared configs, pids, sockets, etc.'
 task :create_extra_paths do
-  queue 'echo "-----> Create configs path"'
-  queue echo_cmd "mkdir -p #{config_path}"
+  comment 'Create configs path'
+  command echo_cmd "mkdir -p #{fetch(:config_path)}"
 
-  queue 'echo "-----> Create shared paths"'
-  shared_paths.each do |p|
-    queue echo_cmd "mkdir -p #{deploy_to}/#{shared_path}/#{p}" unless p.include?(".")
+  comment "Create shared paths"
+  fetch(:shared_dirs, []).each do |p|
+    command echo_cmd "mkdir -p #{fetch(:shared_path)}/#{p}" unless p.include?(".")
   end
 
-  shared_dirs = shared_paths.map { |file| File.dirname("#{deploy_to}/#{shared_path}/#{file}") }.uniq
+  shared_dirs = fetch(:shared_dirs, []).map { |file| File.dirname("#{fetch(:shared_path)}/#{file}") }.uniq
   shared_dirs.map do |dir|
-    queue echo_cmd %{mkdir -p "#{dir}"}
+    command echo_cmd %{mkdir -p "#{dir}"}
   end
 
-  queue 'echo "-----> Create PID and Sockets paths"'
-  queue echo_cmd "mkdir -p #{pids_path} && chown #{user}:#{group} #{pids_path} && chmod +rw #{pids_path}"
-  queue echo_cmd "mkdir -p #{sockets_path} && chown #{user}:#{group} #{sockets_path} && chmod +rw #{sockets_path}"
+  comment 'Create PID and Sockets paths'
+  command echo_cmd "mkdir -p #{fetch(:pids_path)} && chown #{fetch(:user)}:#{fetch(:group)} #{fetch(:pids_path)} && chmod +rw #{fetch(:pids_path)}"
+  command echo_cmd "mkdir -p #{fetch(:sockets_path)} && chown #{fetch(:user)}:#{fetch(:group)} #{fetch(:sockets_path)} && chmod +rw #{fetch(:sockets_path)}"
 
-  if monitored.any?
-    queue 'echo "-----> Create Monit dir"'
-    queue echo_cmd "mkdir -p #{config_path}/monit && chown #{user}:#{group} #{config_path}/monit && chmod +rw #{config_path}/monit"
-    monitored.each do |p|
-      path = "#{config_path}/monit/#{p}"
-      queue echo_cmd "mkdir -p #{path} && chown #{user}:#{group} #{path} && chmod +rw #{path}"
+  if fetch(:monitored, []).any?
+    comment 'Create Monit dir'
+    command echo_cmd "mkdir -p #{fetch(:config_path)}/monit && chown #{fetch(:user)}:#{fetch(:group)} #{fetch(:config_path)}/monit && chmod +rw #{fetch(:config_path)}/monit"
+    fetch(:monitored, []).each do |p|
+      path = "#{fetch(:config_path)}/monit/#{p}"
+      command echo_cmd "mkdir -p #{fetch(:path)} && chown #{fetch(:user)}:#{fetch(:group)} #{fetch(:path)} && chmod +rw #{path}"
     end
   end
 end
@@ -46,5 +46,5 @@ end
 desc 'Create config files'
 task :create_config_files do
   template "secrets.yml.erb"
-  queue  %[echo "-----> Be sure to edit 'shared/config/secrets.yml'."]
+  comment "echo Be sure to edit 'shared/config/secrets.yml'"
 end

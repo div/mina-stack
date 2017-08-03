@@ -7,23 +7,23 @@ namespace :private_pub do
 
   desc "Create configuration and other files"
   task :upload do
-    template "private_pub.yml.erb", private_pub_config
-    queue  %[echo "-----> Be sure to edit #{private_pub_config}."]
+    template "private_pub.yml.erb", fetch(:private_pub_config)
+    comment "Be sure to edit #{fetch(:private_pub_config)}."
   end
 
   desc "Stop Private Pub"
   task :stop do
-    queue %[ if [ -f #{private_pub_pid} ]; then
+    command %[ if [ -f #{fetch(:private_pub_pid)} ]; then
       echo "-----> Stop Private Pub"
-      kill -s QUIT `cat #{private_pub_pid}` || true
+      kill -s QUIT `cat #{fetch(:private_pub_pid)}` || true
       fi ]
   end
 
   desc "Start Private Pub"
   task :start do
-    queue %{
+    command %{
       echo "-----> Start Private Pub"
-      #{echo_cmd %[(cd #{deploy_to}/#{current_path}; #{private_pub_cmd} -s #{private_pub_server} -E #{rails_env} -P #{private_pub_pid} >> #{private_pub_log} 2>&1 </dev/null &) ] }
+      #{echo_cmd %[(cd #{fetch(:current_path)}; #{fetch(:private_pub_cmd)} -s #{fetch(:private_pub_server)} -E #{fetch(:rails_env)} -P #{fetch(:private_pub_pid)} >> #{fetch(:private_pub_log)} 2>&1 </dev/null &) ] }
       }
   end
 

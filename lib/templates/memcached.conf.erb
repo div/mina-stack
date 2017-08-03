@@ -4,7 +4,7 @@
 logfile /var/log/memcached.log
 
 # memory limit
--m <%= memcached_memory_limit %>
+-m <%= fetch(:memcached_memory_limit) %>
 
 # port
 -p 11211

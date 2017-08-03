@@ -12,8 +12,8 @@ stop on runlevel [06]
 reload signal USR1
 normal exit 0 TERM
 
-setuid <%= user %>
-setgid <%= user %>
+setuid <%= fetch(:user) %>
+setgid <%= fetch(:user) %>
 
 respawn
 respawn limit 3 30
@@ -42,9 +42,9 @@ exec /bin/bash <<'EOT'
     # chruby 2.0.0
   fi
 
-  # Logs out to /var/log/upstart/<%= puma_name %>.log by default
+  # Logs out to /var/log/upstart/<%= fetch(:puma_name) %>.log by default
 
-  cd <%= "#{deploy_to!}/#{current_path!}" %>
-  exec <%= puma_start %>
+  cd <%= "#{fetch(:current_path)}" %>
+  exec <%= fetch(:puma_start) %>
 EOT
 end script

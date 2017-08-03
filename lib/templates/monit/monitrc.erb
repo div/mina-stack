@@ -15,7 +15,7 @@ set eventqueue
 
 # set alert foo@example.com
 
-set httpd port <%= monit_http_port %>
-  allow <%= monit_http_username %>:"<%= monit_http_password %>"
+set httpd port <%= fetch(:monit_http_port) %>
+  allow <%= fetch(:monit_http_username) %>:"<%= fetch(:monit_http_password) %>"
 
 include /etc/monit/conf.d/*

@@ -1,21 +1,21 @@
 namespace :memcached do
   desc "Install Memcached"
-  task :install do
+  task :install => :environment do
     invoke :sudo
-    queue "sudo apt-get -y install memcached"
+    command "sudo apt-get -y install memcached"
   end
 
   desc "Setup Memcached"
-  task :setup do
+  task :setup => :environment do
     # template "memcached.erb", "/tmp/memcached.conf"
     # run "#{sudo} mv /tmp/memcached.conf /etc/memcached.conf"
     # restart
   end
 
-  %w[start stop restart].each do |command|
-    desc "#{command} Memcached"
-    task command do
-      queue "sudo service memcached #{command}"
+  %w[start stop restart].each do |cmd|
+    desc "#{cmd} Memcached"
+    task cmd => :environment do
+      command "sudo service memcached #{cmd}"
     end
   end
 end

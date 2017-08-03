@@ -1,10 +1,10 @@
-check process <%= unicorn_name %> with pidfile <%= unicorn_pid %>
-  start program = "/etc/init.d/<%= unicorn_name %> start"
-  stop program = "/etc/init.d/<%= unicorn_name %> stop"
+check process <%= fetch(:unicorn_name) %> with pidfile <%= fetch(:unicorn_pid) %>
+  start program = "/etc/init.d/<%= fetch(:unicorn_name) %> start"
+  stop program = "/etc/init.d/<%= fetch(:unicorn_name) %> stop"
 
-<% unicorn_workers.times do |n| %>
-  <% pid = unicorn_pid.sub(".pid", ".#{n}.pid") %>
-  check process <%= unicorn_name %>_worker_<%= n %> with pidfile <%= pid %>
+<% fetch(:unicorn_workers).times do |n| %>
+  <% pid = fetch(:unicorn_pid).sub(".pid", ".#{n}.pid") %>
+  check process <%= fetch(:unicorn_name)%>_worker_<%= n %> with pidfile <%= pid %>
     start program = "/bin/true"
     stop program = "/usr/bin/test -s <%= pid %> && /bin/kill -QUIT `cat <%= pid %>`"
     if mem > 200.0 MB for 1 cycles then restart

@@ -3,22 +3,22 @@ namespace :monit do
   desc "Install Monit"
   task :install do
     invoke :sudo
-    queue %{echo "-----> Installing Monit..."}
-    queue "sudo apt-get -y install monit"
+    comment "Installing Monit..."
+    command "sudo apt-get -y install monit"
   end
 
   desc "Setup all Monit configuration"
-  task :setup do
+  task :setup => :environment do
     invoke :sudo
-    if monitored.any?
-      queue %{echo "-----> Setting up Monit..."}
-      monitored.each do |daemon|
+    if fetch(:monitored, []).any?
+      comment "Setting up Monit..."
+      fetch(:monitored).each do |daemon|
         invoke :"monit:#{daemon}"
       end
-      invoke :'monit:syntax'
-      invoke :'monit:restart'
+      invoke :"monit:syntax"
+      invoke :"monit:restart"
     else
-      queue %{echo "-----> Skiping monit - nothing is set for monitoring..."}
+      comment "Skipping monit - nothing is set for monitoring..."
     end
   end
 
@@ -26,29 +26,26 @@ namespace :monit do
   task(:postgresql) { monit_config "postgresql" }
   task(:redis) { monit_config "redis" }
   task(:memcached) { monit_config "memcached" }
-  task(:puma) { monit_config "puma", "#{puma_name}" }
-  task(:unicorn) { monit_config "unicorn", "#{unicorn_name}" }
-  task(:sidekiq) { monit_config "sidekiq", "#{sidekiq_name}" }
-  task(:private_pub) { monit_config "private_pub", "#{private_pub_name}" }
+  task(:puma) { monit_config "puma", "#{fetch(:puma_name)}" }
+  task(:unicorn) { monit_config "unicorn", "#{fetch(:unicorn_name)}" }
+  task(:sidekiq) { monit_config "sidekiq", "#{fetch(:sidekiq_name)}" }
+  task(:private_pub) { monit_config "private_pub", "#{fetch(:private_pub_name)}" }
 
-  %w[start stop restart syntax reload].each do |command|
-    desc "Run Monit #{command} script"
-    task command do
+  %w[start stop restart syntax reload].each do |cmd|
+    desc "Run Monit #{cmd} script"
+    task cmd do
       invoke :sudo
-      queue %{echo "-----> Monit #{command}"}
-      queue "sudo service monit #{command}"
+      comment "Monit #{cmd}"
+      command "sudo service monit #{cmd}"
     end
   end
 end
 
 def monit_config(original_name, destination_name = nil)
-  destination_name ||= origin_name
-  path ||= monit_config_path
+  destination_name ||= original_name
+  path ||= fetch(:monit_config_path)
   destination = "#{path}/#{destination_name}"
-  template "monit/#{original_name}.erb", "#{config_path}/monit/#{original_name}"
-  queue echo_cmd %{sudo ln -fs "#{config_path}/monit/#{original_name}" "#{destination}"}
-  queue check_symlink destination
-  # queue "sudo mv /tmp/monit_#{original_name} #{destination}"
-  # queue "sudo chown root #{destination}"
-  # queue "sudo chmod 600 #{destination}"
+  template "monit/#{original_name}.erb", "#{fetch(:config_path)}/monit/#{original_name}.monitrc"
+  command echo_cmd %{sudo ln -s "#{fetch(:config_path)}/monit/#{original_name}.monitrc" "#{destination}.monitrc"}
+  command check_symlink destination
 end

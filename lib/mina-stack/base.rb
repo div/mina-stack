@@ -2,14 +2,14 @@ require 'erb'
 require 'shellwords'
 
 def template(from, to=nil)
-  queue %{echo "-----> Put #{from} file to #{to}"}
-  to ||= "#{config_path}/#{from.chomp(".erb")}"
+  comment "Dropping #{from} file to #{to}"
+  to ||= "#{fetch(:config_path)}/#{from.chomp(".erb")}"
   erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))
   put ERB.new(erb).result(binding), to
 end
 
 def put(content, file)
-  queue %[echo #{escape content} > "#{file}"]
+  command %[echo #{escape content} > "#{file}"]
 end
 
 def escape(str)
@@ -24,8 +24,24 @@ def check_response
   'then echo "----->   SUCCESS"; else echo "----->   FAILED"; fi'
 end
 
-
 task :sudo do
   set :sudo, true
   set :term_mode, :system # :pretty doesn't seem to work with sudo well
+end
+
+namespace :deploy do
+  task :lsp do
+    comment %{Symlinking shared paths}
+
+    fetch(:shared_dirs, []).each do |linked_dir|
+      command %{mkdir -p #{File.dirname("./#{linked_dir}")}}
+      command %{rm -rf "./#{linked_dir}"}
+      command %{ln -s "#{fetch(:shared_path)}/#{linked_dir}" "./#{linked_dir}"}
+    end
+
+    fetch(:shared_files, []).each do |linked_path|
+      command %{rm -f "#{fetch(:current_path)}/#{linked_path}"}
+      command %{ln -s "#{fetch(:shared_path)}/#{linked_path}" "#{fetch(:current_path)}/#{linked_path}"}
+    end
+  end
 end

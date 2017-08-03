@@ -1,33 +1,38 @@
-###########################################################################
-# nginx Tasks
-###########################################################################
-
 namespace :nginx do
+
+  desc "Check syntax"
+  task :check do
+    command echo_cmd "sudo nginx -t"
+  end
 
   desc "Install latest stable release of nginx"
   task :install do
     invoke :sudo
-    queue "sudo add-apt-repository ppa:nginx/stable --yes"
-    queue "sudo apt-get -y update"
-    queue "sudo apt-get -y install nginx"
+    command "sudo add-apt-repository ppa:nginx/stable --yes"
+    command "sudo apt-get -y update"
+    command "sudo apt-get -y install nginx"
   end
 
   desc "Upload and update (link) all nginx config file"
-  task :setup => [:upload, :link, :reload]
+  task :setup => :environment do
+    invoke :'nginx:upload'
+    invoke :'nginx:link'
+    invoke :'nginx:reload'
+  end
 
   desc "Symlink config file"
   task :link do
     invoke :sudo
-    queue %{echo "-----> Symlink nginx config file"}
-    queue echo_cmd %{sudo ln -fs "#{config_path}/nginx.conf" "#{nginx_config}"}
-    queue check_symlink nginx_config
-    queue echo_cmd %{sudo ln -fs "#{config_path}/nginx.conf" "#{nginx_config_e}"}
-    queue check_symlink nginx_config_e
+    comment "Symlink nginx config file"
+    command echo_cmd %{sudo ln -fs "#{fetch(:config_path)}/nginx.conf" "#{fetch(:nginx_config)}"}
+    command check_symlink fetch(:nginx_config)
+    command echo_cmd %{sudo ln -fs "#{fetch(:config_path)}/nginx.conf" "#{fetch(:nginx_config_e)}"}
+    command check_symlink fetch(:nginx_config_e)
   end
 
   desc "Parses nginx config file and uploads it to server"
   task :upload do
-    template 'nginx.conf.erb', "#{config_path}/nginx.conf"
+    template 'nginx.conf.erb', "#{fetch(:config_path)}/nginx.conf"
   end
 
   desc "Parses config file and outputs it to STDOUT (local task)"
@@ -35,15 +40,15 @@ namespace :nginx do
     puts "#"*80
     puts "# nginx.conf"
     puts "#"*80
-    puts erb("#{config_templates_path}/nginx.conf.erb")
+    puts erb("#{fetch(:config_templates_path)}/nginx.conf.erb")
   end
 
   %w(stop start restart reload status).each do |action|
     desc "#{action.capitalize} Nginx"
     task action.to_sym do
       invoke :sudo
-      queue %{echo "-----> #{action.capitalize} Nginx"}
-      queue echo_cmd "sudo service nginx #{action}"
+      comment "#{action.capitalize} Nginx"
+      command echo_cmd "sudo service nginx #{action}"
     end
   end
 end

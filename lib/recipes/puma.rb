@@ -8,24 +8,29 @@ namespace :puma do
   desc "Create configuration and other files"
   task :upload do
     invoke :sudo
-    template "puma.rb.erb", puma_config
-    queue  %[echo "-----> Be sure to edit #{puma_config}."]
+    template "puma.rb.erb", fetch(:puma_config)
+    comment "Be sure to edit #{fetch(:puma_config)}."
     template "upstart/puma.conf.erb", "/tmp/puma_conf"
-    queue "sudo mv /tmp/puma_conf #{puma_upstart}"
+    command "sudo mv /tmp/puma_conf #{fetch(:puma_upstart)}"
   end
 
-  %w[start stop restart].each do |command|
-    desc "#{command.capitalize} puma"
-    task command do
-      queue  %[echo "-----> #{command.capitalize} puma."]
-      queue "sudo #{command} #{puma_name}"
+  %w[start stop restart reload].each do |cmd|
+    desc "#{cmd.capitalize} puma"
+    task cmd do
+      comment "#{cmd.capitalize} puma."
+      command "sudo #{cmd} #{fetch(:puma_name)}"
     end
-  end
 
-  desc "Phased-restart puma"
-  task :'phased-restart' do
-    queue  %[echo "-----> Phased-restart puma."]
-    queue "sudo reload #{puma_name}"
+    task phased_restart: :environment do
+      command %[
+      if [ -e '#{fetch(:pumactl_socket)}' ]; then
+        cd #{fetch(:current_path)} && #{fetch(:pumactl_cmd)} -S #{fetch(:puma_state)} --pidfile #{fetch(:puma_pid)} phased-restart
+      else
+        echo 'Puma is not running!';
+      fi
+    ]
+    end
+
   end
 
 end

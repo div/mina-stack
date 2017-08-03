@@ -1,88 +1,93 @@
 task :defaults do
-  set_default :ruby_version,          "2.2.3"
-  set_default :services_path,         "/etc/init.d"
-  set_default :upstart_path,          "/etc/init"
-  set_default :tmp_path,              "#{deploy_to}/#{shared_path}/tmp"
-  set_default :sockets_path,          "#{tmp_path}/sockets"
-  set_default :pids_path,             "#{tmp_path}/pids"
-  set_default :logs_path,             "#{deploy_to}/#{shared_path}/log"
-  set_default :config_path,           "#{deploy_to}/#{shared_path}/config"
-  set_default :app_namespace,         "#{app!}_#{rails_env!}"
-  set_default :bundle,                "cd #{deploy_to}/#{current_path} && #{bundle_bin}"
+  set :ruby_version,          "2.3.1"
+  set :services_path,         "/etc/init.d"
+  set :upstart_path,          "/etc/init"
+  set :tmp_path,              "#{fetch(:shared_path)}/tmp"
+  set :sockets_path,          "#{fetch(:tmp_path)}/sockets"
+  set :pids_path,             "#{fetch(:tmp_path)}/pids"
+  set :logs_path,             "#{fetch(:shared_path)}/log"
+  set :config_path,           "#{fetch(:shared_path)}/config"
+  set :app_namespace,         "#{fetch(:app)}_#{fetch(:rails_env)}"
+  set :bundle,                "cd #{fetch(:current_path)} && #{fetch(:bundle_bin)}"
 
-  set_default :term_mode,             :pretty
+  set :term_mode,             :pretty
 
-  set_default :psql_user,             "#{app!}"
-  set_default :psql_database,         "#{app_namespace}"
-  set_default :postgresql_version,    "9.4"
-  set_default :postgresql_pid,        "/var/run/postgresql/#{postgresql_version}-main.pid"
+  set :psql_user,             "#{fetch(:app)}"
+  set :psql_database,         "#{fetch(:app_namespace)}"
+  set :postgresql_version,    "9.6"
+  set :postgresql_pid,        "/var/run/postgresql/#{fetch(:postgresql_version)}-main.pid"
 
-  set_default :memcached_pid,         "/var/run/memcached.pid"
+  set :nginx_client_max_body_size, "4M"
+  set :cloudflare_ssl,        true
 
-  set_default :puma_name,             "puma_#{app_namespace!}"
-  set_default :puma_cmd,              lambda { "#{bundle_bin} exec puma" }
-  set_default :pumactl_cmd,           lambda { "#{bundle_bin} exec pumactl" }
-  set_default :puma_config,           "#{config_path}/puma.rb"
-  set_default :puma_pid,              "#{pids_path}/puma.pid"
-  set_default :puma_log,              "#{logs_path}/puma.log"
-  set_default :puma_error_log,        "#{logs_path}/puma.err.log"
-  set_default :puma_socket,           "#{sockets_path}/puma.sock"
-  set_default :puma_state,            "#{sockets_path}/puma.state"
-  set_default :puma_upstart,          "#{upstart_path!}/#{puma_name}.conf"
-  set_default :puma_workers,          2
-  set_default :puma_start,            "#{puma_cmd} -C #{puma_config}"
+  set :memcached_pid,         "/var/run/memcached.pid"
 
-  set_default :unicorn_name,          "unicorn_#{app_namespace!}"
-  set_default :unicorn_socket,        "#{sockets_path}/unicorn.sock"
-  set_default :unicorn_pid,           "#{pids_path}/unicorn.pid"
-  set_default :unicorn_config,        "#{config_path}/unicorn.rb"
-  set_default :unicorn_log,           "#{logs_path}/unicorn.log"
-  set_default :unicorn_error_log,     "#{logs_path}/unicorn.error.log"
-  set_default :unicorn_script,        "#{services_path!}/#{unicorn_name}"
-  set_default :unicorn_workers,       1
-  set_default :unicorn_bin,           lambda { "#{bundle_bin} exec unicorn" }
-  set_default :unicorn_cmd,           "cd #{deploy_to}/#{current_path} && #{unicorn_bin} -D -c #{unicorn_config} -E #{rails_env}"
-  set_default :unicorn_user,          user
-  set_default :unicorn_group,         user
+  set :unicorn_name,          "unicorn_#{fetch(:app_namespace!)}"
+  set :unicorn_socket,        "#{fetch(:sockets_path)}/unicorn.sock"
+  set :unicorn_pid,           "#{fetch(:pids_path)}/unicorn.pid"
+  set :unicorn_config,        "#{fetch(:config_path)}/unicorn.rb"
+  set :unicorn_log,           "#{fetch(:logs_path)}/unicorn.log"
+  set :unicorn_error_log,     "#{fetch(:logs_path)}/unicorn.error.log"
+  set :unicorn_script,        "#{fetch(:services_path!)}/#{fetch(:unicorn_name)}"
+  set :unicorn_workers,       1
+  set :unicorn_bin,           lambda { "#{fetch(:bundle_bin)} exec unicorn" }
+  set :unicorn_cmd,           "cd #{fetch(:current_path)} && #{fetch(:unicorn_bin)} -D -c #{fetch(:unicorn_config)} -E #{fetch(:rails_env)}"
+  set :unicorn_user,          fetch(:user)
+  set :unicorn_group,         fetch(:user)
 
-  set_default :nginx_pid,             "/var/run/nginx.pid"
-  set_default :nginx_config,          "#{nginx_path!}/sites-available/#{app_namespace!}.conf"
-  set_default :nginx_config_e,        "#{nginx_path!}/sites-enabled/#{app_namespace!}.conf"
+  set :nginx_path,            '/etc/nginx'
+  set :nginx_pid,             "/var/run/nginx.pid"
+  set :nginx_config,          "#{fetch(:nginx_path)}/sites-available/#{fetch(:app_namespace)}.conf"
+  set :nginx_config_e,        "#{fetch(:nginx_path)}/sites-enabled/#{fetch(:app_namespace)}.conf"
 
-  set_default :sidekiq_name,          "sidekiq_#{app_namespace!}"
-  set_default :sidekiq_cmd,           lambda { "#{bundle_bin} exec sidekiq" }
-  set_default :sidekiqctl_cmd,        lambda { "#{bundle_prefix} sidekiqctl" }
-  set_default :sidekiq_timeout,       10
-  set_default :sidekiq_config,        "#{config_path}/sidekiq.yml"
-  set_default :sidekiq_log,           "#{logs_path}/sidekiq.log"
-  set_default :sidekiq_pid,           "#{pids_path}/sidekiq.pid"
-  set_default :sidekiq_concurrency,   25
-  set_default :sidekiq_start,         "#{sidekiq_cmd} -e #{rails_env} -C #{sidekiq_config}"
-  set_default :sidekiq_upstart,       "#{upstart_path!}/#{sidekiq_name}.conf"
+  set :sidekiq_name,          "sidekiq_#{fetch(:app_namespace)}"
+  set :sidekiq_cmd,           lambda { "#{fetch(:bundle_bin)} exec sidekiq" }
+  set :sidekiqctl_cmd,        lambda { "#{fetch(:bundle_prefix)} sidekiqctl" }
+  set :sidekiq_timeout,       10
+  set :sidekiq_config,        "#{fetch(:config_path)}/sidekiq.yml"
+  set :sidekiq_log,           "#{fetch(:logs_path)}/sidekiq.log"
+  set :sidekiq_pid,           "#{fetch(:pids_path)}/sidekiq.pid"
+  set :sidekiq_concurrency,   25
+  set :sidekiq_start,         "#{fetch(:sidekiq_cmd)} -e #{fetch(:rails_env)} -C #{fetch(:sidekiq_config)}"
+  set :sidekiq_upstart,       "#{fetch(:upstart_path)}/#{fetch(:sidekiq_name)}.conf"
 
-  set_default :private_pub_name,      "private_pub_#{app_namespace}"
-  set_default :private_pub_cmd,       lambda { "#{bundle_prefix} rackup private_pub.ru" }
-  set_default :private_pub_pid,       "#{pids_path}/private_pub.pid"
-  set_default :private_pub_config,    "#{config_path}/private_pub.yml"
-  set_default :private_pub_log,       "#{logs_path}/private_pub.log"
+  set :private_pub_name,      "private_pub_#{fetch(:app_namespace)}"
+  set :private_pub_cmd,       lambda { "#{fetch(:bundle_prefix)} rackup private_pub.ru" }
+  set :private_pub_pid,       "#{fetch(:pids_path)}/private_pub.pid"
+  set :private_pub_config,    "#{fetch(:config_path)}/private_pub.yml"
+  set :private_pub_log,       "#{fetch(:logs_path)}/private_pub.log"
 
-  set_default :rpush_name,            "rpush_#{app_namespace!}"
-  set_default :rpush_cmd,             lambda { "#{bundle_bin} exec rpush" }
-  set_default :rpush_upstart,         "#{upstart_path!}/#{rpush_name}.conf"
-  set_default :rpush_start,           "#{rpush_cmd} start -f -e #{rails_env}"
+  set :rpush_name,            "rpush_#{fetch(:app_namespace!)}"
+  set :rpush_cmd,             lambda { "#{fetch(:bundle_bin)} exec rpush" }
+  set :rpush_upstart,         "#{fetch(:upstart_path)}/#{fetch(:rpush_name)}.conf"
+  set :rpush_start,           "#{fetch(:rpush_cmd)} start -f -e #{fetch(:rails_env)}"
 
-  set_default :monit_config_path,     "/etc/monit/conf.d"
-  set_default :monit_http_port,       2812
-  set_default :monit_http_username,   "PleaseChangeMe_monit"
-  set_default :monit_http_password,   "PleaseChangeMe"
+  set :puma_name,             "puma_#{fetch(:app_namespace)}"
+  set :puma_cmd,              lambda { "#{fetch(:bundle_bin)} exec puma" }
+  set :pumactl_cmd,           lambda { "#{fetch(:bundle_bin)} exec pumactl" }
+  set :puma_config,           "#{fetch(:config_path)}/puma.rb"
+  set :puma_pid,              "#{fetch(:pids_path)}/puma.pid"
+  set :puma_log,              "#{fetch(:logs_path)}/puma.log"
+  set :puma_error_log,        "#{fetch(:logs_path)}/puma.err.log"
+  set :puma_socket,           "#{fetch(:sockets_path)}/puma.sock"
+  set :puma_state,            "#{fetch(:sockets_path)}/puma.state"
+  set :puma_upstart,          "#{fetch(:upstart_path)}/#{fetch(:puma_name)}.conf"
+  set :puma_workers,          2
+  set :puma_start,            "#{fetch(:puma_cmd)} -C #{fetch(:puma_config)}"
 
-  set_default :shared_paths,          %w(
-                                        tmp
-                                        log
-                                        public/uploads
-                                      )
+  set :monit_config_path,     "/etc/monit/conf.d"
+  set :monit_http_port,       2812
+  set :monit_http_username,   "PleaseChangeMe_monit"
+  set :monit_http_password,   "PleaseChangeMe"
 
-  set_default :monitored,             %w(
+  set :shared_files,                  %w(
+                                      config/puma.rb
+                                      config/database.yml
+                                      config/application.yml
+                                      config/sidekiq.yml
+                                    )
+
+  set :monitored,             %w(
                                         nginx
                                         postgresql
                                         redis
@@ -92,7 +97,7 @@ task :defaults do
                                         memcached
                                         )
 
-  set_default :server_stack,          %w(
+  set :server_stack,          %w(
                                         nginx
                                         postgresql
                                         redis
