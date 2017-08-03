@@ -44,6 +44,15 @@ then copy your ssh keys
 ```
 ssh-copy-id deploy@IPADDRESS
 ```
+
+test your login, and,
+
+```
+echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+```
+
+if you know what you're doing.
+
 Install all the stack to the server
 ```
  bundle exec mina install
