@@ -5,7 +5,7 @@ namespace :rbenv do
     invoke :sudo
     queue %{echo "-----> Installing Ruby"}
     queue "sudo apt-get -y install curl git-core"
-    queue "curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash"
+    queue "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash"
     bashrc = <<-BASHRC
       if [ -d $HOME/.rbenv ]; then
         export PATH="$HOME/.rbenv/bin:$PATH"
