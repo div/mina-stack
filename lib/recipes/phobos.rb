@@ -1,4 +1,4 @@
-namespace :rpush do
+namespace :phobos do
 
   task(:install) {  }
 

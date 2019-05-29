@@ -35,6 +35,7 @@ exec /bin/bash <<'EOT'
 
   # Logs out to /var/log/upstart/<%= phobos_name %>.log by default
 
+  export RAILS_ENV=<%= rails_env %>
   cd <%= "#{deploy_to!}/#{current_path!}" %>
   exec <%= phobos_start %>
 EOT
