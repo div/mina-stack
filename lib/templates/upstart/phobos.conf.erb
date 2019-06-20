@@ -1,0 +1,42 @@
+description "Phobos Process"
+
+start on runlevel [2345] and started networking
+stop on runlevel [!2345] or  stopped networking
+
+setuid <%= user %>
+setgid <%= user %>
+
+respawn
+respawn limit 3 30
+
+script
+# this script runs in /bin/sh by default
+# respawn as bash so we can source in rbenv
+exec /bin/bash <<'EOT'
+  # set HOME to the setuid user's home, there doesn't seem to be a better, portable way
+  export HOME="$(eval echo ~$(id -un))"
+
+  if [ -d "$HOME/.rbenv/bin" ]; then
+    export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
+  elif [ -f  /etc/profile.d/rvm.sh ]; then
+    source /etc/profile.d/rvm.sh
+  elif [ -f /usr/local/rvm/scripts/rvm ]; then
+    source /etc/profile.d/rvm.sh
+  elif [ -f "$HOME/.rvm/scripts/rvm" ]; then
+    source "$HOME/.rvm/scripts/rvm"
+  elif [ -f /usr/local/share/chruby/chruby.sh ]; then
+    source /usr/local/share/chruby/chruby.sh
+    if [ -f /usr/local/share/chruby/auto.sh ]; then
+      source /usr/local/share/chruby/auto.sh
+    fi
+    # if you aren't using auto, set your version here
+    # chruby 2.0.0
+  fi
+
+  # Logs out to /var/log/upstart/<%= phobos_name %>.log by default
+
+  export RAILS_ENV=<%= rails_env %>
+  cd <%= "#{deploy_to!}/#{current_path!}" %>
+  exec <%= phobos_start %>
+EOT
+end script

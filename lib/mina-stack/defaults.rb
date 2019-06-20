@@ -71,6 +71,13 @@ task :defaults do
   set_default :rpush_upstart,         "#{upstart_path!}/#{rpush_name}.conf"
   set_default :rpush_start,           "#{rpush_cmd} start -f -e #{rails_env}"
 
+  set_default :phobos_name,            "phobos_#{app_namespace!}"
+  set_default :phobos_cmd,             lambda { "#{bundle_bin} exec phobos" }
+  set_default :phobos_upstart,         "#{upstart_path!}/#{phobos_name}.conf"
+  set_default :phobos_boot_file,       "config/phobos_boot.rb"
+  set_default :phobos_config_file,     "config/phobos.yml"
+  set_default :phobos_start,           "#{phobos_cmd} start -b #{phobos_boot_file} -c #{phobos_config_file}"
+
   set_default :monit_config_path,     "/etc/monit/conf.d"
   set_default :monit_http_port,       2812
   set_default :monit_http_username,   "PleaseChangeMe_monit"
